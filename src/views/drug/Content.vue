@@ -3,9 +3,18 @@
     <div class="pic-loop">
       <a-carousel autoplay>
         <!-- <div class="pic-loop-item" :style="{backgroundIamge: url('')}">1</div> -->
-        <div class="pic-loop-item">2</div>
-        <div class="pic-loop-item">3</div>
-        <div class="pic-loop-item">4</div>
+        <div class="pic-loop-item">
+          <h1>1</h1>
+        </div>
+        <div class="pic-loop-item">
+          <h1>2</h1>
+        </div>
+        <div class="pic-loop-item">
+          <h1>3</h1>
+        </div>
+        <div class="pic-loop-item">
+          <h1>4</h1>
+        </div>
       </a-carousel>
     </div>
     <w-card></w-card>

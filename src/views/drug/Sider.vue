@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import NavMenu from '@/components/NavMenu/NavMenu.vue';
+import NavMenu from '@/components/NavMenu';
 
 export default {
   data() {

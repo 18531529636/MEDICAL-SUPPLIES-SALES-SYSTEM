@@ -1,16 +1,29 @@
 <template>
   <div id="app">
+    <cart-box />
     <router-view />
   </div>
 </template>
 
-<style>
+<script>
+import CartBox from '@/components/CartBox';
+
+export default {
+  components: {
+    CartBox,
+  },
+};
+</script>
+
+<style lang="scss" scoped>
 html,
 body,
 #app {
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
   min-width: 1280px;
 }
 #app {
@@ -21,4 +34,5 @@ body,
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
     Microsoft YaHei, SimSun, sans-serif;
 }
+
 </style>

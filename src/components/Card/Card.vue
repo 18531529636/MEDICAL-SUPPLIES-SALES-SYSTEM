@@ -1,33 +1,11 @@
 <template>
   <div class="card-wrapper">
-    <div class="card">
-      <div class="card-title" id="operation">
-        <span class="card-title-title">手术用品</span>
-      </div>
-
-      <div class="card-item">
-        <div class="card-item-imgbox">
-          <img class="card-item-imgbox-img" src="./首页-医疗器械1.jpg" alt="" />
-        </div>
-        <div class="card-item-introduction">
-          <h4 class="card-item-introduction-title">
-            削铁如泥的手术刀手术刀手术刀
-          </h4>
-          <span class="card-item-introduction-mmarketvalue">市场价：123</span>
-          <span class="card-item-introduction-membervalue"
-            >会员指导价：122</span
-          >
-          <button class="card-item-introduction-add">加入购物车</button>
-        </div>
-      </div>
-    </div>
-
     <div
       class="card"
       v-for="(operationList, operationListIndex) in operations"
       :key="operationListIndex"
     >
-      <div class="card-title" id="operation">
+      <div class="card-title" :id="operationList.title">
         <span class="card-title-title">{{ operationList.title }}</span>
       </div>
 
@@ -35,6 +13,7 @@
         class="card-item"
         v-for="(operation, operationIndex) in operationList.operationList"
         :key="operationIndex"
+        @click.stop="toDeatilPage(operation.commodityId)"
       >
         <div class="card-item-imgbox">
           <img class="card-item-imgbox-img" :src="operation.imgSrc" alt="" />
@@ -49,7 +28,9 @@
           <span class="card-item-introduction-membervalue"
             >会员指导价：{{ operation.memberValue }}</span
           >
-          <button class="card-item-introduction-add">加入购物车</button>
+          <button class="card-item-introduction-add" @click.stop="addToCart">
+            加入购物车
+          </button>
         </div>
       </div>
     </div>
@@ -66,8 +47,176 @@ export default {
           title: '手术用品',
           operationList: [
             {
+              commodityId: 1,
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
-              imgSrc: import('./首页-医疗器械1.jpg'),
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 2,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 3,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 4,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 5,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+          ],
+        },
+        {
+          title: '手术用品1',
+          operationList: [
+            {
+              commodityId: 6,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 6,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 7,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 8,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 9,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+          ],
+        },
+        {
+          title: '手术用品2',
+          operationList: [
+            {
+              commodityId: 6,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 6,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 7,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 8,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 9,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+          ],
+        },
+        {
+          title: '手术用品3',
+          operationList: [
+            {
+              commodityId: 6,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 6,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 7,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 8,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
+              marketValue: 123,
+              memberValue: 122,
+              operationId: 0,
+            },
+            {
+              commodityId: 9,
+              operationTitle: '削铁如泥的手术刀手术刀手术刀',
+              imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
               memberValue: 122,
               operationId: 0,
@@ -78,10 +227,16 @@ export default {
     },
   },
   methods: {
+    addToCart() {
+      // 请求接口 接口返回 是否加入成功， 如果库存不够 则 返回不成功
 
+    },
+    toDeatilPage(commodityId) {
+      // 跳转路由到 DetailPage
+      this.$router.push({ name: 'DetailPage', query: { commodityId } });
+    },
   },
   created() {
-    console.log(this.operations);
   },
 };
 </script>
@@ -90,10 +245,10 @@ export default {
 .card-wrapper {
   position: relative;
   width: 100%;
-  height: 500px;
+  // height: 500px;
   background-color: #eee;
-  padding: 0 100px;
-  overflow: scroll;
+  padding: 0 100px 50px;
+  // overflow: scroll;
 
   .card {
     position: relative;
@@ -123,14 +278,12 @@ export default {
 
     &-item {
       cursor: pointer;
-      border: 2px solid #eee;
-      background-color: #fff;
+      background-color: rgb(248, 248, 248);
       position: relative;
       width: 200px;
       height: 310px;
-      // background-color: cadetblue;
       padding: 10px;
-      box-shadow: 0 0 10px #ccc;
+      // box-shadow: 0 0 10px #ccc;
       transition: box-shadow 0.3s ease-in-out;
 
       &-imgbox {
@@ -177,7 +330,7 @@ export default {
           margin-top: 8px;
           outline: none;
           border: none;
-          background-color: #eee;
+          background-color: #fff;
 
           &:hover {
             background-color: #bbb;

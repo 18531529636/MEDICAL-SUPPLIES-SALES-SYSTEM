@@ -17,7 +17,7 @@
             :key="index"
             class="flex-item-content-item"
           >
-            <a href="#operation">{{ i }}</a>
+            <a :href="['#'+i.title]" >{{ i.title }}</a>
           </li>
         </ul>
       </div>
@@ -38,7 +38,51 @@ export default {
         {
           title: '手术',
           detailText: [
-            '手术刀',
+            {
+              title: '手术用品',
+              operationList: [
+                {
+                  commodityId: 1,
+                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
+                  imgSrc: './statistic/首页-医疗器械1.jpg',
+                  marketValue: 123,
+                  memberValue: 122,
+                  operationId: 0,
+                },
+                {
+                  commodityId: 2,
+                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
+                  imgSrc: './statistic/首页-医疗器械1.jpg',
+                  marketValue: 123,
+                  memberValue: 122,
+                  operationId: 0,
+                },
+                {
+                  commodityId: 3,
+                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
+                  imgSrc: './statistic/首页-医疗器械1.jpg',
+                  marketValue: 123,
+                  memberValue: 122,
+                  operationId: 0,
+                },
+                {
+                  commodityId: 4,
+                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
+                  imgSrc: './statistic/首页-医疗器械1.jpg',
+                  marketValue: 123,
+                  memberValue: 122,
+                  operationId: 0,
+                },
+                {
+                  commodityId: 5,
+                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
+                  imgSrc: './statistic/首页-医疗器械1.jpg',
+                  marketValue: 123,
+                  memberValue: 122,
+                  operationId: 0,
+                },
+              ],
+            },
             '手术灯',
             '手术手套',
           ],
@@ -85,9 +129,9 @@ export default {
 }
 
 .flex-wrapper {
-  position: absolute;
+  position: fixed;
   top: 200px;
-  left: 196px;
+  left: 198px;
   width: 400px;
   height: 450px;
   padding: 20px;
