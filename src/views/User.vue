@@ -6,7 +6,7 @@
     </div>
     <div class="content">
       <div class="nav-header">
-        <span class="nav-title">XXX医疗用品</span>
+        <span @click="toHomme" class="nav-title">XXX医疗用品</span>
       </div>
       <router-view />
     </div>
@@ -19,6 +19,11 @@ import NavInfo from '@/components/NavMyInfo';
 export default {
   components: {
     NavInfo,
+  },
+  methods: {
+    toHomme() {
+      this.$router.push({ name: 'Home' });
+    },
   },
 };
 </script>
@@ -75,6 +80,7 @@ $inputBoxBorder: rgb(59, 250, 250);
       text-align: left;
 
       .nav-title {
+        cursor: pointer;
         position: relative;
         left: 20px;
         display: inline-block;

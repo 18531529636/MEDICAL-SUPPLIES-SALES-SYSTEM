@@ -49,6 +49,29 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/merchant',
+    name: 'MerChant',
+    redirect: '/merchant/login',
+    // route level code-splitting
+    // this generates a separate chunk (drug.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "merchant" */ '../pages/Merchant.vue'),
+    children: [
+      {
+        // 登录
+        name: 'Login',
+        path: '/merchant/login',
+        component: () => import(/* webpackChunkName: "login" */ '../pages/login/login.vue'),
+      },
+      {
+        // 商家信息
+        name: 'merchantinfo',
+        path: '/merchant/merchantinfo',
+        component: () => import(/* webpackChunkName: "merchantinfo" */ '../pages/login/login.vue'),
+      },
+    ],
+  },
 ];
 
 const router = new VueRouter({

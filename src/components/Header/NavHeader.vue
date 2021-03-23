@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrapper">
     <div class="nav-header">
-      <span class="nav-title">XXX医疗用品</span>
+      <span @click="toHome" class="nav-title">XXX医疗用品</span>
       <div class="input-box">
         <input placeholder="请输入搜索信息" type="text" />
         <button>搜索</button>
@@ -29,6 +29,9 @@ export default {
         this.$router.push({ name: 'Info' });
       }
     },
+    toHome() {
+      this.$router.push({ name: 'Home' });
+    },
   },
 };
 </script>
@@ -50,6 +53,7 @@ $inputBoxBorder: rgb(59, 250, 250);
     height: 100%;
 
     .nav-title {
+      cursor: pointer;
       left: 50px;
       position: relative;
       display: inline-block;

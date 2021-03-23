@@ -28,7 +28,10 @@
           <span class="card-item-introduction-membervalue"
             >会员指导价：{{ operation.memberValue }}</span
           >
-          <button class="card-item-introduction-add" @click.stop="addToCart">
+          <button
+            class="card-item-introduction-add"
+            @click.stop="addToCart(operation)"
+          >
             加入购物车
           </button>
         </div>
@@ -48,6 +51,7 @@ export default {
           operationList: [
             {
               commodityId: 1,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -56,6 +60,7 @@ export default {
             },
             {
               commodityId: 2,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -64,6 +69,7 @@ export default {
             },
             {
               commodityId: 3,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -72,6 +78,7 @@ export default {
             },
             {
               commodityId: 4,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -80,6 +87,7 @@ export default {
             },
             {
               commodityId: 5,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -93,6 +101,7 @@ export default {
           operationList: [
             {
               commodityId: 6,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -101,6 +110,7 @@ export default {
             },
             {
               commodityId: 6,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -109,6 +119,7 @@ export default {
             },
             {
               commodityId: 7,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -117,6 +128,7 @@ export default {
             },
             {
               commodityId: 8,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -125,6 +137,7 @@ export default {
             },
             {
               commodityId: 9,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -138,6 +151,7 @@ export default {
           operationList: [
             {
               commodityId: 6,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -146,6 +160,7 @@ export default {
             },
             {
               commodityId: 6,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -154,6 +169,7 @@ export default {
             },
             {
               commodityId: 7,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -162,6 +178,7 @@ export default {
             },
             {
               commodityId: 8,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -170,6 +187,7 @@ export default {
             },
             {
               commodityId: 9,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -183,6 +201,7 @@ export default {
           operationList: [
             {
               commodityId: 6,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -191,6 +210,7 @@ export default {
             },
             {
               commodityId: 6,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -199,6 +219,7 @@ export default {
             },
             {
               commodityId: 7,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -207,6 +228,7 @@ export default {
             },
             {
               commodityId: 8,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -215,6 +237,7 @@ export default {
             },
             {
               commodityId: 9,
+              name: '手术刀',
               operationTitle: '削铁如泥的手术刀手术刀手术刀',
               imgSrc: './statistic/首页-医疗器械1.jpg',
               marketValue: 123,
@@ -227,9 +250,9 @@ export default {
     },
   },
   methods: {
-    addToCart() {
+    addToCart(operation) {
       // 请求接口 接口返回 是否加入成功， 如果库存不够 则 返回不成功
-
+      this.$store.commit('ADD_COMMODITY', { commodity: operation });
     },
     toDeatilPage(commodityId) {
       // 跳转路由到 DetailPage
@@ -246,7 +269,7 @@ export default {
   position: relative;
   width: 100%;
   // height: 500px;
-  background-color: #eee;
+  // background-color: #eee;
   padding: 0 100px 50px;
   // overflow: scroll;
 

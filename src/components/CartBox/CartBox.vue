@@ -1,14 +1,21 @@
 <template>
   <!-- 实时与vuex交互组件，读取购物车数量等 -->
-  <div class="cartbox">
+  <div
+    class="cartbox"
+    @mouseenter="tableShow = true"
+    @mouseleave="tableShow = false"
+  >
+    <div class="allCount">
+      <span>{{ allCount }}</span>
+    </div>
     <div class="cartbox-title">
       <span>购物车</span>
     </div>
-    <div class="cartbox-content">
+    <div class="cartbox-content" v-show="tableShow">
       <a-table
+        :rowKey="(record) => record.commodityId"
         :columns="columns"
         :data-source="dataSource"
-        :row-selection="rowSelection"
         :pagination="false"
         :scroll="{ y: 150 }"
       >
@@ -55,6 +62,7 @@ export default {
   },
   data() {
     return {
+      tableShow: false,
       selectedRows: [],
       columns: [
         {
@@ -89,6 +97,7 @@ export default {
           key: 'handler',
         },
       ],
+      allCount: 0,
     };
   },
   computed: {
@@ -116,31 +125,23 @@ export default {
       };
     },
   },
-  methods: {
-    deleteOperation(record) {
-      const data = Array.from(this.selectedRows);
-      // const dataSource = Array.from(this.dataSource);
-      const selectIndex = data.findIndex((item) => item.orderNumber === record.orderNumber);
-      // const dataIndex = dataSource.findIndex((item) => item.orderNumber === record.orderNumber);
-
-      if (selectIndex !== -1) {
-        this.selectedRows.splice(selectIndex, 1);
-      }
-      this.$store.commit('DELETE_COMMODITY', { commodity: record });
-      // this.dataSource.splice(dataIndex, 1);
+  watch: {
+    dataSource: {
+      handler(val) {
+        let count = 0;
+        val.forEach((item) => {
+          count += item.count;
+        });
+        this.allCount = count;
+      },
+      deep: true,
+      immediate: true,
     },
   },
-  created() {
-    // this.dataSource = this.$store.state.commodityList;
-    // const data = [];
-    // this.dataSource.forEach((item) => {
-    //   const obj = {
-    //     ...item,
-    //     totalPrice: item.count * item.memberValue,
-    //   };
-    //   data.push(obj);
-    // });
-    // this.dataSource = data;
+  methods: {
+    deleteOperation(record) {
+      this.$store.commit('DELETE_COMMODITY', { commodity: record });
+    },
   },
 };
 </script>
@@ -167,10 +168,26 @@ li {
   background-color: rgb(59, 165, 156, 0.8);
   text-align: left;
   border-radius: 10px 0 0 10px;
-  overflow: hidden;
+  // overflow: hidden;
   transition: all 0.3s ease-in-out;
 
+  .allCount {
+    display: inline-block;
+    position: absolute;
+    border-radius: 15px;
+    top: -20px;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: rgb(255, 51, 0);
+    color: #fff;
+    font-size: 18px;
+  }
+
   &-title {
+    border-radius: 10px 0 0 10px;
     color: #000;
     font-weight: bolder;
     font-size: 14px;

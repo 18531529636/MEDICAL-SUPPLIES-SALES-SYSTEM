@@ -6,22 +6,25 @@
           <div class="cart-cart-title">
             <h3>购物车</h3>
           </div>
-          <a-table
-            :columns="columns"
-            :data-source="dataSource"
-            :row-selection="rowSelection"
-            :pagination="false"
-            :scroll="{ y: 300 }"
-          >
-            <span class="ss" slot="marketvalue" slot-scope="text">
-              {{ text }}
-            </span>
-            <span slot="handler" slot-scope="text, record, index">
-              <a href="javascript:;" @click="deleteOperation(record, index)"
-                >删除</a
-              >
-            </span>
-          </a-table>
+          <div class="cart-cart-table">
+            <a-table
+              :rowKey="(record) => record.commodityId"
+              :columns="columns"
+              :data-source="dataSource"
+              :row-selection="rowSelection"
+              :pagination="false"
+              :scroll="{ y: 350 }"
+            >
+              <span slot="marketvalue" slot-scope="text">
+                {{ text }}
+              </span>
+              <span slot="handler" slot-scope="text, record, index">
+                <a href="javascript:;" @click="deleteOperation(record, index)"
+                  >删除</a
+                >
+              </span>
+            </a-table>
+          </div>
           <div class="cart-cart-pay">
             <div class="alltotalprice">
               <span class="alltotalprice-label">总价为：</span>
@@ -38,25 +41,33 @@
               </a-radio-group>
             </div>
             <a-button type="primary" @click.stop="qrShow = true">支付</a-button>
-            <div class="QRcode" v-if="qrShow">
+            <div class="QRcode" v-show="qrShow">
               <span class="QRcode-price">总价：{{ allTotalPrice }}</span>
               <span class="close" @click.stop="qrShow = false">关闭</span>
               <div class="qr">
-                <img :src="paySrc" alt="微信支付" />
+                <img :src="paySrc.src" :alt="paySrc.alt" />
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="cart-commodity-status">
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { mapState } from 'vuex';
 
-const tencentPay = './statistic/tencentpay.jpg';
-const aliPay = './statistic/tencentpay.jpg';
+const tencentPay = {
+  src: '@/components/Card/首页-医疗器械1.jpg',
+  alt: '微信支付',
+};
+const aliPay = {
+  src: './statistic/tencentpay.jpg',
+  alt: '支付宝支付',
+};
 
 export default {
   data() {
@@ -97,8 +108,18 @@ export default {
           key: 'handler',
         },
       ],
-      // dataSource: [],
     };
+  },
+  watch: {
+    dataSource: {
+      handler(val) {
+        const data = Array.from(this.selectedRows);
+        const stateData = Array.from(val);
+        this.selectedRows = data
+          .filter((item) => stateData.findIndex((i) => i.commodityId === item.commodityId) !== -1);
+      },
+      deep: true,
+    },
   },
   computed: {
     dataSource: {
@@ -143,20 +164,10 @@ export default {
   },
   methods: {
     deleteOperation(record) {
-      const data = Array.from(this.selectedRows);
-      // const dataSource = Array.from(this.dataSource);
-      const selectIndex = data.findIndex((item) => item.orderNumber === record.orderNumber);
-      // const dataIndex = dataSource.findIndex((item) => item.orderNumber === record.orderNumber);
-
-      if (selectIndex !== -1) {
-        this.selectedRows.splice(selectIndex, 1);
-      }
       this.$store.commit('DELETE_COMMODITY', { commodity: record });
-      // this.dataSource.splice(dataIndex, 1);
     },
   },
   created() {
-    // this.dataSource = this.$store.state.commodityList;
   },
 };
 </script>
@@ -169,17 +180,15 @@ export default {
   background-color: rgb(172, 91, 134, 0.3);
 
   .cart {
-    // position: relative;
     margin: 0 auto;
     width: 80%;
     height: 100%;
-    // background-color: deeppink;
 
     &-cart {
       position: relative;
       width: 100%;
       height: 500px;
-      // background-color: deepskyblue;
+      background-color: brown;
 
       &-title {
         display: block;
@@ -195,19 +204,27 @@ export default {
         }
       }
 
+      &-table{
+        height: 400px;
+      }
+
       &-pay {
+        background-color: rgb(119, 119, 218);
         position: relative;
+
         margin-top: 10px;
         text-align: left;
         height: 30px;
+
         .alltotalprice {
-          // background-color: cornsilk;
+          position: relative;
           display: inline-block;
           padding: 0 30px;
           height: 30px;
           line-height: 30px;
 
           &-label {
+            position: relative;
             display: inline-block;
             color: #fff;
             font-size: 16px;
@@ -216,6 +233,7 @@ export default {
           }
 
           &-price {
+            position: relative;
             display: inline-block;
             color: crimson;
             font-size: 20px;
@@ -247,6 +265,7 @@ export default {
           background-color: rgba(100, 100, 148, 0.8);
 
           &-price {
+            position: relative;
             display: inline-block;
             padding: 20px;
             font-size: 18px;
@@ -261,12 +280,13 @@ export default {
             cursor: pointer;
           }
           .qr {
+            position: relative;
             margin: 0 auto;
             width: 270px;
             height: 270px;
-            // background-color: blue;
 
             img {
+              position: relative;
               width: 270px;
               height: 270px;
             }
