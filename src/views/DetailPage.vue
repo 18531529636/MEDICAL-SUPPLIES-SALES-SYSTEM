@@ -1,14 +1,17 @@
 <template>
   <div class="detail-wrapper">
+    <cart-box />
     <nav-header />
   </div>
 </template>
 
 <script>
 import NavHeader from '@/components/Header';
+import CartBox from '@/components/CartBox';
 
 export default {
   components: {
+    CartBox,
     NavHeader,
   },
   methods: {

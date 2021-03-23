@@ -1,5 +1,6 @@
 <template>
   <div class="home" id="components-layout-demo-basic">
+    <cart-box />
     <a-layout>
       <a-layout-sider>
         <layout-sider></layout-sider>
@@ -23,12 +24,14 @@
 <script>
 import LayoutSider from '@/views/home/Sider.vue';
 import LayoutContent from '@/views/home/Content.vue';
+import CartBox from '@/components/CartBox';
 
 export default {
   name: 'Home',
   components: {
     LayoutSider,
     LayoutContent,
+    CartBox,
   },
 };
 </script>
@@ -78,6 +81,6 @@ $layoutbg: #ddd;
   // padding: 10px 0;
   // padding-bottom: 2px;
 }
-#components-layout-demo-basic > .ant-layout:last-child {
-}
+// #components-layout-demo-basic > .ant-layout:last-child {
+// }
 </style>

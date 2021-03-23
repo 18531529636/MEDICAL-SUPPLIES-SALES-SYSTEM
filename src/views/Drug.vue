@@ -1,5 +1,6 @@
 <template>
   <div class="drug-wrapper" id="components-layout-demo-basic">
+    <cart-box />
     <a-layout>
       <a-layout-sider>
         <nav-menu></nav-menu>
@@ -28,6 +29,7 @@
 import LayoutContent from '@/views/drug/Content.vue';
 import NavMenu from '@/components/NavMenu';
 import NavHeader from '@/components/Header';
+import CartBox from '@/components/CartBox';
 // import MyTest from './test.vue';
 
 export default {
@@ -35,6 +37,7 @@ export default {
   components: {
     LayoutContent,
     NavHeader,
+    CartBox,
     NavMenu,
     // MyTest,
   },

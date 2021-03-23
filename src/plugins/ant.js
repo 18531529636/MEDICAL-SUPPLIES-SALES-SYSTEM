@@ -7,6 +7,7 @@ import {
   Carousel,
   Table,
   Radio,
+  Icon,
 } from 'ant-design-vue';
 
 Vue.use(Button);
@@ -16,3 +17,4 @@ Vue.use(Menu);
 Vue.use(Carousel);
 Vue.use(Table);
 Vue.use(Radio);
+Vue.use(Icon);

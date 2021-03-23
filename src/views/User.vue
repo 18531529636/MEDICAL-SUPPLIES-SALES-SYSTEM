@@ -1,5 +1,6 @@
 <template>
   <div class="user-wrapper">
+    <cart-box />
     <div class="bg-circle"></div>
     <div class="sider">
       <nav-info></nav-info>
@@ -15,10 +16,12 @@
 
 <script>
 import NavInfo from '@/components/NavMyInfo';
+import CartBox from '@/components/CartBox';
 
 export default {
   components: {
     NavInfo,
+    CartBox,
   },
   methods: {
     toHomme() {
