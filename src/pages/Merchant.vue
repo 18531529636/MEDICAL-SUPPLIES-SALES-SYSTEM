@@ -23,7 +23,6 @@ export default {
   height: 100%;
   background-color: black;
   .merchant-content {
-    padding-left: 200px;
     width: 100%;
     height: 100%;
   }
