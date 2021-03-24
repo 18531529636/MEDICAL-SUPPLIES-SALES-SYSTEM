@@ -11,12 +11,20 @@
 
       <div
         class="card-item"
+        :style="{
+          width: `${cardWidth}px`,
+          height: `${cardHeight}px`,
+        }"
         v-for="(operation, operationIndex) in operationList.operationList"
         :key="operationIndex"
         @click.stop="toDeatilPage(operation.commodityId)"
       >
-        <div class="card-item-imgbox">
-          <img class="card-item-imgbox-img" :src="operation.imgSrc" alt="" />
+        <div
+          class="card-item-imgbox"
+          :style="{ width: `${(cardWidth / 10) * 9}px`, height: `${cardHeight / 6}px` }"
+        >
+          <img class="card-item-imgbox-img" alt="" />
+          <!-- :src="operation.imgSrc"  -->
         </div>
         <div class="card-item-introduction">
           <h4 class="card-item-introduction-title">
@@ -43,6 +51,14 @@
 <script>
 export default {
   props: {
+    cardWidth: {
+      type: Number,
+      default: 200,
+    },
+    cardHeight: {
+      type: Number,
+      default: 310,
+    },
     operations: {
       type: Array,
       default: () => [
@@ -278,7 +294,8 @@ export default {
     margin: 0 auto;
     width: 80%;
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     padding: 20px;
     background-color: #fff;
@@ -303,9 +320,8 @@ export default {
       cursor: pointer;
       background-color: rgb(248, 248, 248);
       position: relative;
-      width: 200px;
-      height: 310px;
       padding: 10px;
+      margin: 10px 10px;
       // box-shadow: 0 0 10px #ccc;
       transition: box-shadow 0.3s ease-in-out;
 
@@ -315,6 +331,7 @@ export default {
         height: 180px;
         margin: 0 auto;
         // background-color: chartreuse;
+        background-color: chartreuse;
 
         &-img {
           position: absolute;
@@ -322,6 +339,7 @@ export default {
           top: 50%;
           transform: translate(0, -50%);
           width: 160px;
+          background-color: chartreuse;
         }
       }
 

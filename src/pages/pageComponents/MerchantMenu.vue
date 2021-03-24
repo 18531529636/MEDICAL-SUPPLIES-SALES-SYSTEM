@@ -65,7 +65,7 @@ export default {
 .menu-wrapper {
   width: 200px;
   height: 100%;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   text-align: left;
