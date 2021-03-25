@@ -21,27 +21,38 @@
       >
         <div
           class="card-item-imgbox"
-          :style="{ width: `${(cardWidth / 10) * 9}px`, height: `${cardHeight / 6}px` }"
+          :style="{
+            width: `${(cardWidth / 10) * 9}px`,
+            height: `${cardHeight / 6}px`,
+          }"
         >
           <img class="card-item-imgbox-img" alt="" />
           <!-- :src="operation.imgSrc"  -->
         </div>
         <div class="card-item-introduction">
-          <h4 class="card-item-introduction-title">
-            {{ operation.operationTitle }}
-          </h4>
-          <span class="card-item-introduction-mmarketvalue"
-            >市场价：{{ operation.marketValue }}</span
-          >
-          <span class="card-item-introduction-membervalue"
-            >会员指导价：{{ operation.memberValue }}</span
-          >
-          <button
-            class="card-item-introduction-add"
-            @click.stop="addToCart(operation)"
-          >
-            加入购物车
-          </button>
+          <div>
+            <h4 class="card-item-introduction-title">
+              {{ operation.operationTitle }}
+            </h4>
+          </div>
+          <div>
+            <span class="card-item-introduction-mmarketvalue"
+              >市场价：{{ operation.marketValue }}</span
+            >
+          </div>
+          <div class="">
+            <span class="card-item-introduction-membervalue"
+              >会员指导价：{{ operation.memberValue }}</span
+            >
+          </div>
+          <div>
+            <button
+              class="card-item-introduction-add"
+              @click.stop="addToCart(operation)"
+            >
+              加入购物车
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -58,6 +69,10 @@ export default {
     cardHeight: {
       type: Number,
       default: 310,
+    },
+    display: {
+      type: String,
+      default: 'flex',
     },
     operations: {
       type: Array,
@@ -268,11 +283,13 @@ export default {
   methods: {
     addToCart(operation) {
       // 请求接口 接口返回 是否加入成功， 如果库存不够 则 返回不成功
-      this.$store.commit('ADD_COMMODITY', { commodity: operation });
+      // this.$store.commit('ADD_COMMODITY', { commodity: operation });
+      this.$emit('addToCart', operation);
     },
     toDeatilPage(commodityId) {
       // 跳转路由到 DetailPage
-      this.$router.push({ name: 'DetailPage', query: { commodityId } });
+      // this.$router.push({ name: 'DetailPage', query: { commodityId } });
+      this.$emit('toDeatilPage', commodityId);
     },
   },
   created() {
@@ -348,6 +365,9 @@ export default {
         padding: 2px 0 0 0;
         width: 160px;
         overflow: hidden;
+        // text-align: left;
+        // display: flex;
+        // flex-wrap: wrap;
 
         &-title {
           width: 100%;
@@ -390,5 +410,8 @@ export default {
       clear: both;
     }
   }
+}
+
+.flex-father {
 }
 </style>
