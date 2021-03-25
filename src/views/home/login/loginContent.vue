@@ -19,17 +19,17 @@
         </div>
       </div>
       <div class="operation-box">
-        <component :is="loginComponent"></component>
+        <component @loginRequest="loginRequest" :is="loginComponent"></component>
       </div>
     </div>
-    <div class="wrapper">
+    <!-- <div class="wrapper">
       <div class="drug" @click="toDrug">
         <span>医疗器械 / 用具</span>
       </div>
       <div class="apparatus" @click="toApparatus">
         <span>医疗用药</span>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -63,6 +63,9 @@ export default {
     },
     toApparatus() {
       this.$router.push('apparatus');
+    },
+    loginRequest(params) {
+      console.log(params);
     },
   },
 };

@@ -18,14 +18,18 @@ export default {
 
 <style lang='scss' scoped>
 .sider-wrapper {
-  position: absolute;
+  // position: absolute;
+  position: fixed;
   height: 50%;
   top: 20%;
-  width: 100%;
+  width: 10%;
+
   .content {
+    width: 100%;
     h2 {
       font-weight: bolder;
     }
+
     span {
       display: inline-block;
       position: absolute;

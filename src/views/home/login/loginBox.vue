@@ -1,16 +1,28 @@
 <template>
   <div class="input-box">
-    <input placeholder="请输入账号" class="user-id" type="text" />
-    <input placeholder="请输入密码" class="user-pwd" type="text" />
+    <input placeholder="请输入账号" v-model="loginData.accoutNum" class="user-id" type="text" />
+    <input placeholder="请输入密码" v-model="loginData.password" class="user-pwd" type="text" />
     <div class="user-login">
-      <a-button type="default">登录</a-button>
+      <a-button @click="login" type="default">登录</a-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-
+  data() {
+    return {
+      loginData: {
+        accoutNum: '',
+        password: '',
+      },
+    };
+  },
+  methods: {
+    login() {
+      this.$emit('loginRequest', this.loginData);
+    },
+  },
 };
 </script>
 

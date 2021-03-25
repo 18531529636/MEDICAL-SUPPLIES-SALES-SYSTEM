@@ -20,16 +20,19 @@
         <div class="user-send-back">
           <span> 退货订单 </span>
         </div>
+        <div @click="logOut" class="user-send-back">
+          <span> 退出登录 </span>
+        </div>
       </div>
     </div>
-    <div class="wrapper">
+    <!-- <div class="wrapper">
       <div class="drug" @click="toDrug">
         <span>医疗器械 / 用具</span>
       </div>
       <div class="apparatus" @click="toApparatus">
         <span>医疗用药</span>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -41,6 +44,9 @@ export default {
     },
     toApparatus() {
       this.$router.push('apparatus');
+    },
+    logOut() {
+      this.$emit('logOut');
     },
   },
 };
