@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import WCard from '@/components/Card/Card.vue';
+import WCard from '@/components/CommodityCard/CommodityCard.vue';
 
 export default {
   components: {
@@ -54,7 +54,8 @@ $transitionTime: 0.5s;
 
 .content-wrapper {
   position: relative;
-  height: 100%;
+  // height:%;
+  background-color: #eee;
 
   .pic-loop {
     margin: 0 auto;

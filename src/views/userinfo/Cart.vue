@@ -61,7 +61,7 @@
 <script>
 
 const tencentPay = {
-  src: '@/components/Card/首页-医疗器械1.jpg',
+  src: '@/components/CommodityCard/首页-医疗器械1.jpg',
   alt: '微信支付',
 };
 const aliPay = {

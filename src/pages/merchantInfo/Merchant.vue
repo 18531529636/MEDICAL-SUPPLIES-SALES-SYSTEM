@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import WCard from '@/components/Card';
+import WCard from '@/components/CommodityCard';
 
 export default {
   components: {

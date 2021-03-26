@@ -2,7 +2,6 @@
   <div class="content-wrapper">
     <div class="top-image"></div>
     <component @logOut="logOut" :is="logined"></component>
-
     <div class="wrapper">
       <div class="drug" @click="toDrug">
         <span>医疗器械 / 用具</span>

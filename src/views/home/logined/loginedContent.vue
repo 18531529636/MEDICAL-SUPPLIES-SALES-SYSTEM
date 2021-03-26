@@ -25,14 +25,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="wrapper">
-      <div class="drug" @click="toDrug">
-        <span>医疗器械 / 用具</span>
-      </div>
-      <div class="apparatus" @click="toApparatus">
-        <span>医疗用药</span>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -62,14 +54,14 @@ $userTransitionTime: 0.3s;
   z-index: 2;
   position: relative;
   width: 90%;
-  height: 100%;
+  height: 300px;
   margin: 0 auto;
   padding-top: 5%;
 
   .user {
     position: relative;
     width: 100%;
-    height: 40%;
+    height: 200px;
     top: 2%;
     background-color: #f2f5f5;
     border-radius: 3px;
