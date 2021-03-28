@@ -7,9 +7,9 @@
       theme="dark"
       :inline-collapsed="collapsed"
     >
-    <a-button type="primary" class="menu-button" @click="toggleCollapsed">
-      <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
-    </a-button>
+      <a-button type="primary" class="menu-button" @click="toggleCollapsed">
+        <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'" />
+      </a-button>
       <a-menu-item key="1">
         <a-icon type="pie-chart" />
         <span>Option 1</span>

@@ -13,7 +13,7 @@
         }"
         v-for="info in infoList[cateGory.key]"
         :key="info.commodityId"
-        @click.stop="buttonClick(info)"
+        @click.stop="cardClick(info)"
       >
         <div
           class="card-item-imgbox"
@@ -22,10 +22,15 @@
             height: `${cardHeight / 2}px`,
           }"
         >
-          <img class="card-item-imgbox-img" alt="" />
+          <img
+            :style="`width: ${(cardWidth / 10) * 9}px`"
+            class="card-item-imgbox-img"
+            alt=""
+            src="/statistic/首页-医疗器械1.jpg"
+          />
           <!-- :src="operation.imgSrc"  -->
         </div>
-        <slot name="introduction">
+        <slot :info="info" name="cardItemIntroduction">
           <div class="card-item-introduction">
             <div>
               <h4 class="card-item-introduction-title">
@@ -45,7 +50,7 @@
             <div>
               <button
                 class="card-item-introduction-add"
-                @click.stop="divClick(info)"
+                @click.stop="buttonClick(info)"
               >
                 加入购物车
               </button>
@@ -61,12 +66,12 @@
 export default {
   props: {
     cardWidth: {
-      type: Number,
-      default: 200,
+      type: String,
+      default: '200',
     },
     cardHeight: {
-      type: Number,
-      default: 310,
+      type: String,
+      default: '310',
     },
     display: {
       type: String,
@@ -170,14 +175,14 @@ export default {
 
   },
   methods: {
-    divClick(operation) {
+    cardClick(operation) {
       // 请求接口 接口返回 是否加入成功， 如果库存不够 则 返回不成功
-      // this.$store.commit('ADD_COMMODITY', { commodity: operation });
-      this.$emit('divClick', operation);
+      // this.$router.push({ name: 'DetailPage', query: { commodityId } });
+      this.$emit('cardClick', operation);
     },
     buttonClick(operation) {
       // 跳转路由到 DetailPage
-      // this.$router.push({ name: 'DetailPage', query: { commodityId } });
+      // this.$store.commit('ADD_COMMODITY', { commodity: operation });
       this.$emit('buttonClick', operation);
     },
   },
@@ -244,7 +249,6 @@ export default {
           left: 0;
           top: 50%;
           transform: translate(0, -50%);
-          width: 160px;
           background-color: chartreuse;
         }
       }
@@ -301,6 +305,6 @@ export default {
   }
 }
 
-.flex-father {
-}
+// .flex-father {
+// }
 </style>
