@@ -7,9 +7,16 @@
       <div class="mycommodity-content">
         <w-card @cardClick="cardClick" cardWidth="600" cardHeight="600">
           <template v-slot:cardItemIntroduction="cardItemIntroduction">
-            <div class="card-item-info">
+            <div class="card-item-info" @click.stop="">
               <div class="card-item-info-title">
-                {{ cardItemIntroduction.info.operationTitle }}
+                <label for="">标题:</label>
+                <input
+                  v-if="isEdit"
+                  type="text"
+                  placeholder="请输入标题"
+                  v-model="cardItemIntroduction.info.operationTitle"
+                />
+                <span v-else>{{ cardItemIntroduction.info.operationTitle }}</span>
               </div>
             </div>
           </template>
@@ -64,7 +71,7 @@ export default {
   },
   data() {
     return {
-
+      isEdit: true,
     };
   },
   methods: {
@@ -89,11 +96,11 @@ export default {
         color: #fff;
       }
     }
-    &-content{
+    &-content {
       width: 100%;
-      background-color: blue;
 
-      .card-item-info{
+      .card-item-info {
+        text-align: left;
         width: 500px;
         height: 40px;
         background-color: blue;
