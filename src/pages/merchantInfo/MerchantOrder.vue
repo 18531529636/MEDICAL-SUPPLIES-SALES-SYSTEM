@@ -11,10 +11,6 @@
           <a-table
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
-            :scroll="{
-              y:
-                cardOperationList[cardContent.cateGoryKey].length < 8 ? 0 : 400,
-            }"
           >
             <span slot="orderStatus" slot-scope="orderStatus">
               <a-tag
