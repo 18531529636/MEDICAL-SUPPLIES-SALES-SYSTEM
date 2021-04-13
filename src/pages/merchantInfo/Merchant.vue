@@ -13,18 +13,19 @@
 import NavInfo from '@/components/NavMyInfo';
 import MerchantInfo from '@/pages/merchantInfo/MerchantInfo.vue';
 import MerchantCommodity from '@/pages/merchantInfo/MerchantCommodity.vue';
+import MerchantOrder from '@/pages/merchantInfo/MerchantOrder.vue';
 
 const navData = [
+  { key: 'MerchantOrder', label: '订单' },
   { key: 'MerchantInfo', label: '商品' },
   { key: 'MerchantCommodity', label: '商家信息' },
 ];
 export default {
-
   components: {
-    // MerchantMenu,
     NavInfo,
     MerchantInfo,
     MerchantCommodity,
+    MerchantOrder,
   },
   data() {
     return {

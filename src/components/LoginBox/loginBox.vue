@@ -3,14 +3,21 @@
     <input placeholder="请输入账号" class="user-id" type="text" />
     <input placeholder="请输入密码" class="user-pwd" type="text" />
     <div class="user-login">
-      <a-button type="default">登录</a-button>
+      <a-button type="default" @click="checkLogin">登录</a-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-
+  methods: {
+    checkLogin() {
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
+        this.$router.push({ name: 'Merchantinfo' });
+      }
+    },
+  },
 };
 </script>
 

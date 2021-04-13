@@ -23,42 +23,6 @@
         </w-card>
       </div>
     </div>
-    <div class="myOrder">
-      <div class="myOrder-title">
-        <h2 class="myOrder-title-h">我的订单</h2>
-      </div>
-      <div class="myOrder-content">
-        <w-card @cardClick="cardClick" cardWidth="300" cardHeight="300">
-          <template v-slot:cardItemIntroduction="cardItemIntroduction">
-            <div class="card-item-introduction">
-              <div>
-                <h4 class="card-item-introduction-title">
-                  {{ cardItemIntroduction.info.operationTitle }}
-                </h4>
-              </div>
-              <div>
-                <span class="card-item-introduction-mmarketvalue"
-                  >市场价：{{ cardItemIntroduction.info.marketValue }}</span
-                >
-              </div>
-              <div class="">
-                <span class="card-item-introduction-membervalue"
-                  >会员指导价：{{ cardItemIntroduction.info.memberValue }}</span
-                >
-              </div>
-              <div>
-                <button
-                  class="card-item-introduction-add"
-                  @click.stop="divClick(crdItemIntroduction.info)"
-                >
-                  加入购物车
-                </button>
-              </div>
-            </div>
-          </template>
-        </w-card>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -102,13 +66,6 @@ export default {
         width: 500px;
         height: 40px;
         background-color: blue;
-      }
-    }
-  }
-  .myOrder {
-    &-title {
-      &-h {
-        color: #fff;
       }
     }
   }

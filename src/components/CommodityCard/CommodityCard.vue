@@ -5,59 +5,68 @@
         <span class="card-title-title">{{ cateGory.title }}</span>
       </div>
 
-      <div
-        class="card-item"
-        :style="{
-          width: `${cardWidth}px`,
-          height: `${cardHeight}px`,
-        }"
-        v-for="info in infoList[cateGory.key]"
-        :key="info.commodityId"
-        @click.stop="cardClick(info)"
-      >
+      <slot :cateGoryKey="cateGory.key" name="cardContent">
         <div
-          class="card-item-imgbox"
+          class="card-item"
           :style="{
-            width: `${(cardWidth / 10) * 9}px`,
-            height: `${cardHeight / 2}px`,
+            width: `${cardWidth}px`,
+            height: `${cardHeight}px`,
           }"
+          v-for="info in infoList[cateGory.key]"
+          :key="info.commodityId"
+          @click.stop="cardClick(info)"
         >
-          <img
-            :style="`width: ${(cardWidth / 10) * 9}px`"
-            class="card-item-imgbox-img"
-            alt=""
-            src="/statistic/首页-医疗器械1.jpg"
-          />
-          <!-- :src="operation.imgSrc"  -->
-        </div>
-        <slot :info="info" name="cardItemIntroduction">
-          <div class="card-item-introduction">
-            <div>
-              <h4 class="card-item-introduction-title">
-                {{ info.operationTitle }}
-              </h4>
-            </div>
-            <div>
-              <span class="card-item-introduction-mmarketvalue"
-                >市场价：{{ info.marketValue }}</span
-              >
-            </div>
-            <div class="">
-              <span class="card-item-introduction-membervalue"
-                >会员指导价：{{ info.memberValue }}</span
-              >
-            </div>
-            <div>
-              <button
-                class="card-item-introduction-add"
-                @click.stop="buttonClick(info)"
-              >
-                加入购物车
-              </button>
-            </div>
+          <div
+            class="card-item-imgbox"
+            :style="{
+              width: `${(cardWidth / 10) * 9}px`,
+              height: `${cardHeight / 2}px`,
+            }"
+          >
+            <img
+              :style="imgSize"
+              class="card-item-imgbox-img"
+              alt=""
+              src="/statistic/首页-医疗器械1.jpg"
+            />
+            <!-- :src="operation.imgSrc"  -->
           </div>
-        </slot>
-      </div>
+          <slot
+            :info="info"
+            :cateGoryKey="cateGory.key"
+            name="cardItemIntroduction"
+          >
+            <div
+              class="card-item-introduction"
+              :style="{ width: `${(cardWidth / 10) * 9}px` }"
+            >
+              <div>
+                <h4 class="card-item-introduction-title">
+                  {{ info.operationTitle }}
+                </h4>
+              </div>
+              <div>
+                <span class="card-item-introduction-mmarketvalue"
+                  >市场价：{{ info.marketValue }}</span
+                >
+              </div>
+              <div class="">
+                <span class="card-item-introduction-membervalue"
+                  >会员指导价：{{ info.memberValue }}</span
+                >
+              </div>
+              <div>
+                <button
+                  class="card-item-introduction-add"
+                  @click.stop="buttonClick(info)"
+                >
+                  加入购物车
+                </button>
+              </div>
+            </div>
+          </slot>
+        </div>
+      </slot>
     </div>
   </div>
 </template>
@@ -174,6 +183,11 @@ export default {
     },
 
   },
+  computed: {
+    imgSize() {
+      return ((this.cardWidth / 10) * 6) < (this.cardHeight / 2) ? `width :${(this.cardWidth / 10) * 9}px` : `height: ${this.cardHeight / 2}px`;
+    },
+  },
   methods: {
     cardClick(operation) {
       // 请求接口 接口返回 是否加入成功， 如果库存不够 则 返回不成功
@@ -196,16 +210,13 @@ export default {
   position: relative;
   margin: 0 auto;
   width: 1411px;
-  // height: 500px;
   padding-bottom: 50px;
-  // overflow: scroll;
 
   .card {
     position: relative;
     margin: 0 auto;
     width: 100%;
     display: flex;
-    // justify-content: space-between;
     justify-content: flex-start;
     flex-wrap: wrap;
     padding: 20px;
@@ -233,7 +244,6 @@ export default {
       position: relative;
       padding: 10px;
       margin: 10px 10px;
-      // box-shadow: 0 0 10px #ccc;
       transition: box-shadow 0.3s ease-in-out;
 
       &-imgbox {
@@ -241,15 +251,13 @@ export default {
         width: 160px;
         height: 180px;
         margin: 0 auto;
-        // background-color: chartreuse;
-        background-color: chartreuse;
 
         &-img {
           position: absolute;
-          left: 0;
+          left: 50%;
           top: 50%;
-          transform: translate(0, -50%);
-          background-color: chartreuse;
+          transform: translate(-50%, -50%);
+          // background-color: chartreuse;
         }
       }
 
@@ -258,9 +266,6 @@ export default {
         padding: 2px 0 0 0;
         width: 160px;
         overflow: hidden;
-        // text-align: left;
-        // display: flex;
-        // flex-wrap: wrap;
 
         &-title {
           width: 100%;

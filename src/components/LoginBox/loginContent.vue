@@ -22,20 +22,12 @@
         <component :is="loginComponent"></component>
       </div>
     </div>
-    <!-- <div class="wrapper">
-      <div class="drug" @click="toDrug">
-        <span>医疗器械 / 用具</span>
-      </div>
-      <div class="apparatus" @click="toApparatus">
-        <span>医疗用药</span>
-      </div>
-    </div> -->
   </div>
 </template>
 
 <script>
-import LoginBox from '@/views/home/login/loginBox.vue';
-import RegisterBox from '@/views/home/login/registerBox.vue';
+import LoginBox from '@/components/LoginBox/loginBox.vue';
+import RegisterBox from '@/components/LoginBox/registerBox.vue';
 
 export default {
   components: {

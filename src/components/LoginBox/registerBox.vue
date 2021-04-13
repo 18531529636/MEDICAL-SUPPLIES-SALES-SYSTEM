@@ -141,8 +141,6 @@ export default {
       padding: 5px 20px;
       color: rgb(112, 110, 112);
     }
-    // border: none;
-    // background-color: violet;
   }
 
   .user-id:focus,
@@ -152,12 +150,7 @@ export default {
     transition: border 0.3s ease-in-out;
     border-bottom: 1.5px solid #40a9ff;
   }
-  // .user-id {
-  // }
-  // .user-pwd {
-  // }
   .user-login {
-    // margin-top: 20px;
     position: absolute;
     display: inline-block;
     width: 100%;

@@ -66,7 +66,7 @@ const routes = [
       },
       {
         // 商家信息
-        name: 'merchantinfo',
+        name: 'Merchantinfo',
         path: '/merchant/merchantinfo',
         component: () => import(/* webpackChunkName: "merchantinfo" */ '../pages/merchantInfo/Merchant.vue'),
       },
