@@ -3,13 +3,14 @@
     <cart-box />
     <div class="bg-circle"></div>
     <div class="sider">
-      <nav-info></nav-info>
+      <nav-info :currentPage="currentPage" @pageChange="pageChange" :pages="pages"></nav-info>
     </div>
     <div class="content">
       <div class="nav-header">
         <span @click="toHomme" class="nav-title">XXX医疗用品</span>
       </div>
-      <router-view />
+      <component :is="currentPage" ></component>
+      <!-- <router-view /> -->
     </div>
   </div>
 </template>
@@ -17,17 +18,40 @@
 <script>
 import NavInfo from '@/components/NavMyInfo';
 import CartBox from '@/components/CartBox';
+import Cart from '@/views/userinfo/Cart.vue';
+import Info from '@/views/userinfo/Info.vue';
+
+const pages = [
+  { key: 'Cart', label: '购物信息' },
+  { key: 'Info', label: '个人信息' },
+];
 
 export default {
   components: {
     NavInfo,
     CartBox,
+    Cart,
+    Info,
+  },
+  data() {
+    return {
+      pages,
+      currentPage: 'Cart',
+    };
   },
   methods: {
     toHomme() {
       this.$router.push({ name: 'Home' });
     },
+    pageChange(parmas) {
+      this.currentPage = parmas;
+    },
   },
+  // created() {
+  //   if (this.$route.query.page) {
+  //     this.currentPage = this.$route.query.page;
+  //   }
+  // },
 };
 </script>
 
@@ -54,10 +78,10 @@ $inputBoxBorder: rgb(59, 250, 250);
 
   .sider {
     display: inline-block;
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
-    width: 10%;
+    width: 200px;
     height: 100%;
     z-index: 3;
   }
@@ -67,7 +91,7 @@ $inputBoxBorder: rgb(59, 250, 250);
     position: absolute;
     right: 0;
     top: 0;
-    width: 90%;
+    width: calc(100% - 200px);
     height: 100%;
     z-index: 3;
 

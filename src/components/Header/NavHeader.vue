@@ -22,12 +22,14 @@
 export default {
   methods: {
     toUser(page) {
-      if (page === 'cart') {
-        // 跳转页面同时 给页面一个值
-        this.$router.push({ name: 'Cart' });
-      } else if (page === 'info') {
-        this.$router.push({ name: 'Info' });
-      }
+      console.log(page);
+      // if (page === 'cart') {
+      //   // 跳转页面同时 给页面一个值
+      //   this.$router.push({ name: 'User', query: { page: 'cart' } });
+      // } else if (page === 'info') {
+      //   this.$router.push({ name: 'User', query: { page: 'info' } });
+      // }
+      this.$router.push({ name: 'User' });
     },
     toHome() {
       this.$router.push({ name: 'Home' });

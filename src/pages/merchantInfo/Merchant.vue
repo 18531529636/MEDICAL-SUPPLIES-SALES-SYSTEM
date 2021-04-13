@@ -1,118 +1,65 @@
 <template>
-  <div class="merchantinfo-wrapper">
-    <div class="myCommodity">
-      <div class="myCommodity-title">
-        <h2 class="myCommodity-title-h">我的商品</h2>
-      </div>
-      <div class="mycommodity-content">
-        <w-card @cardClick="cardClick" cardWidth="600" cardHeight="600">
-          <template v-slot:cardItemIntroduction="cardItemIntroduction">
-            <div class="card-item-info" @click.stop="">
-              <div class="card-item-info-title">
-                <label for="">标题:</label>
-                <input
-                  v-if="isEdit"
-                  type="text"
-                  placeholder="请输入标题"
-                  v-model="cardItemIntroduction.info.operationTitle"
-                />
-                <span v-else>{{ cardItemIntroduction.info.operationTitle }}</span>
-              </div>
-            </div>
-          </template>
-        </w-card>
-      </div>
+  <div class="merchant">
+    <div class="sider">
+      <nav-info :pages="navData" :currentPage="currentPage" @pageChange="pageChange"></nav-info>
     </div>
-    <div class="myOrder">
-      <div class="myOrder-title">
-        <h2 class="myOrder-title-h">我的订单</h2>
-      </div>
-      <div class="myOrder-content">
-        <w-card @cardClick="cardClick" cardWidth="300" cardHeight="300">
-          <template v-slot:cardItemIntroduction="cardItemIntroduction">
-            <div class="card-item-introduction">
-              <div>
-                <h4 class="card-item-introduction-title">
-                  {{ cardItemIntroduction.info.operationTitle }}
-                </h4>
-              </div>
-              <div>
-                <span class="card-item-introduction-mmarketvalue"
-                  >市场价：{{ cardItemIntroduction.info.marketValue }}</span
-                >
-              </div>
-              <div class="">
-                <span class="card-item-introduction-membervalue"
-                  >会员指导价：{{ cardItemIntroduction.info.memberValue }}</span
-                >
-              </div>
-              <div>
-                <button
-                  class="card-item-introduction-add"
-                  @click.stop="divClick(crdItemIntroduction.info)"
-                >
-                  加入购物车
-                </button>
-              </div>
-            </div>
-          </template>
-        </w-card>
-      </div>
+    <div class="merchant-content">
+      <component :is="currentPage"></component>
     </div>
   </div>
 </template>
 
 <script>
-import WCard from '@/components/CommodityCard';
+import NavInfo from '@/components/NavMyInfo';
+import MerchantInfo from '@/pages/merchantInfo/MerchantInfo.vue';
+import MerchantCommodity from '@/pages/merchantInfo/MerchantCommodity.vue';
 
+const navData = [
+  { key: 'MerchantInfo', label: '商品' },
+  { key: 'MerchantCommodity', label: '商家信息' },
+];
 export default {
+
   components: {
-    WCard,
+    // MerchantMenu,
+    NavInfo,
+    MerchantInfo,
+    MerchantCommodity,
   },
   data() {
     return {
-      isEdit: true,
+      navData,
+      currentPage: navData[0].key,
     };
   },
   methods: {
-    cardClick(operation) {
-      const { commodityId } = operation;
-      this.$router.push({ name: 'DetailPage', query: { commodityId } });
+    pageChange(parmas) {
+      this.currentPage = parmas;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.merchantinfo-wrapper {
+
+.merchant {
   width: 100%;
-  // height: 100%;
-  padding-left: 200px;
-  background-color: rgb(52, 52, 129);
-
-  .mycommodity {
-    &-title {
-      &-h {
-        color: #fff;
-      }
-    }
-    &-content {
-      width: 100%;
-
-      .card-item-info {
-        text-align: left;
-        width: 500px;
-        height: 40px;
-        background-color: blue;
-      }
-    }
+  height: 100%;
+  background-color: black;
+  .merchant-content {
+    // display: inline-block;
+    margin-left: 200px;
+    width: calc(100% - 200px);
+    height: 100%;
   }
-  .myOrder {
-    &-title {
-      &-h {
-        color: #fff;
-      }
-    }
+  .sider{
+    display: inline-block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 100%;
+    z-index: 3;
   }
 }
 </style>

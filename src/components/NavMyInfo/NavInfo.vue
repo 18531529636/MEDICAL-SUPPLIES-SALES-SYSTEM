@@ -2,30 +2,43 @@
   <div class="nav-wrapper">
     <ul class="nav">
       <li
+        v-for="page in pages" :key="page.key"
+        :class="{ 'nav-item': true, active: currentPage === page.key }"
+        @click="changePage(page.key)"
+      >
+        {{ page.label }}
+      </li>
+      <!-- <li
         :class="{ 'nav-item': true, active: this.$route.name === 'Cart' }"
-        @click="toUser('Cart')"
+        @click="changePage('Cart')"
       >
         购物信息
       </li>
       <li
         :class="{ 'nav-item': true, active: this.$route.name === 'Info' }"
-        @click="toUser('Info')"
+        @click="changePage('Info')"
       >
         个人信息
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    pages: {
+      type: Array,
+      default: () => [],
+    },
+    currentPage: {
+      type: String,
+      default: '',
+    },
+  },
   methods: {
-    toUser(page) {
-      if (page === 'Cart' && this.$route.name !== 'Cart') {
-        this.$router.push({ name: 'Cart', query: { commodityId: this.$route.query.commodityId } });
-      } else if (page === 'Info' && this.$route.name !== 'Info') {
-        this.$router.push({ name: 'Info', query: { commodityId: this.$route.query.commodityId } });
-      }
+    changePage(page) {
+      this.$emit('pageChange', page);
     },
   },
 };
@@ -39,6 +52,7 @@ export default {
   height: 100%;
   box-shadow: 0 0 6px #ddd;
   color: #eee;
+  background-color: blue;
 
   .nav {
     width: 100%;
