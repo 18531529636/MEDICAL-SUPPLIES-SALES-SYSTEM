@@ -189,9 +189,11 @@ export default {
     },
     approvalAgree(agree) {
       if (agree) {
+        // eslint-disable-next-line no-alert
         alert('同意退货');
         return;
       }
+      // eslint-disable-next-line no-alert
       alert('不同意退货 ');
     },
   },
