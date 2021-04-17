@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import buyerApi from '@/api/buyer';
 import WCard from '@/components/CommodityCard';
 
 const status = {
@@ -279,6 +280,8 @@ export default {
   created() {
     // eslint-disable-next-line no-alert
     // alert('请求数据接口');
+    // TODO
+    buyerApi.login({ loginNumber: '1370099717', password: 'a123456' });
     const unshippedOrderList = [];
     for (let i = 0; i < 100; i += 1) {
       const count = Math.floor(Math.random() * 100);
