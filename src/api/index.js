@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// https://juejin.cn/post/6844904033782611976 axios封装
 const service = axios.create({
-  baseURL: '/devServer',
+  baseURL: 'localhost:3000',
 });
 
 // service.interceptors.request.use((config) => {
