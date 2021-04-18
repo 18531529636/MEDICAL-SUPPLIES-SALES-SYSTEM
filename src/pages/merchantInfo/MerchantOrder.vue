@@ -12,71 +12,34 @@
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
           >
-            <span slot="orderStatus" slot-scope="orderStatus, record, index">
-              <a-tag :color="tagColor(orderStatus)">
+            <span slot="orderStatus" slot-scope="orderStatus">
+              <a-tag
+                :color="
+                  orderStatus === '0'
+                    ? 'geekblue'
+                    : orderStatus === '1'
+                    ? 'green'
+                    : 'volcano'
+                "
+              >
                 {{ tagName(orderStatus) }}
-                <a-icon
-                  v-if="!['0'].includes(orderStatus)"
-                  :type="iconFront(orderStatus)"
-                ></a-icon>
               </a-tag>
               <a-button
-                v-if="orderStatus === '3'"
-                type="link"
+                v-if="orderStatus === '2'"
+                type="primary"
                 shape="circle"
                 size="small"
                 icon="check"
-                @click="
-                  approvalAgree(true, index, cardContent.cateGoryKey, record)
-                "
+                @click="approvalAgree(true)"
               ></a-button>
               <a-button
-                v-if="orderStatus === '3'"
-                type="link"
+                v-if="orderStatus === '2'"
+                type="danger"
                 shape="circle"
                 size="small"
                 icon="close"
-                @click="
-                  approvalAgree(false, index, cardContent.cateGoryKey, record)
-                "
+                @click="approvalAgree(false)"
               ></a-button>
-              <a-button
-                type="primary"
-                size="small"
-                v-if="
-                  orderStatus === '0' &&
-                  courierNumberOrderNumber !== record.orderNumber
-                "
-                @click="inputCourierNumber(record.orderNumber)"
-                >输入订单编号</a-button
-              >
-              <div
-                class="input-courier-number"
-                v-if="
-                  orderStatus === '0' &&
-                  courierNumberOrderNumber === record.orderNumber
-                "
-              >
-                <a-input
-                  class="order-input"
-                  v-model="courierNumber"
-                  v-filter-space="courierNumber"
-                ></a-input>
-                <a-button
-                  type="link"
-                  shape="circle"
-                  size="small"
-                  icon="check"
-                  @click="sendCourierNumber"
-                ></a-button>
-                <a-button
-                  type="link"
-                  shape="circle"
-                  size="small"
-                  icon="close"
-                  @click="closeCourierNumber"
-                ></a-button>
-              </div>
             </span>
           </a-table>
         </div>
@@ -89,24 +52,12 @@
 import buyerApi from '@/api/buyer';
 import WCard from '@/components/CommodityCard';
 
-const status = {
-  0: { tagName: '未发货', tagColor: 'geekblue' },
-  1: { tagName: '已发货', tagColor: 'green', icon: 'reload' },
-  2: { tagName: '已签收', tagColor: 'cyan', icon: 'check' },
-  3: { tagName: '退货申请中', icon: 'dash', tagColor: 'pink' },
-  4: { tagName: '不同意退货', icon: 'close', tagColor: 'red' },
-  5: { tagName: '同意退货', icon: 'check', tagColor: 'cyan' },
-  6: { tagName: '商品退回中', icon: 'reload', tagColor: 'purple' },
-  7: { tagName: '商品退回成功', icon: 'smile', tagColor: 'green' },
-};
 export default {
   components: {
     WCard,
   },
   data() {
     return {
-      courierNumberOrderNumber: '',
-      courierNumber: '',
       columns: [
         {
           title: '订单编号',
@@ -165,13 +116,12 @@ export default {
           scopedSlots: { customRender: 'buyerName' },
         },
         {
-          align: 'left',
+          align: 'center',
           title: '订单状态',
           dataIndex: 'orderStatus',
           key: 'orderStatus',
           slots: { title: 'customTitle' },
           scopedSlots: { customRender: 'orderStatus' },
-          width: 300,
         },
       ],
       cardOperations: [
@@ -184,7 +134,7 @@ export default {
         returnOrder: [],
         shippedOrder: [
           {
-            key: 10,
+            key: 8,
             orderNumber: 8,
             commodityCount: 4,
             actualPayment: 223,
@@ -195,24 +145,6 @@ export default {
             name: '手术刀',
             operationTitle: '削铁如泥的手术刀手术刀手术刀',
             imgSrc: './statistic/首页-医疗器械1.jpg',
-            actualValue: 123,
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            key: 8,
-            orderNumber: 8,
-            commodityCount: 4,
-            actualPayment: 223,
-            orderStatus: '2',
-            buyerId: 123231,
-            buyerName: 'test',
-            commodityId: 3,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            actualValue: 123,
             marketValue: 123,
             memberValue: 122,
             operationId: 0,
@@ -229,7 +161,6 @@ export default {
             name: '手术刀',
             operationTitle: '削铁如泥的手术刀手术刀手术刀',
             imgSrc: './statistic/首页-医疗器械1.jpg',
-            actualValue: 123,
             marketValue: 123,
             memberValue: 122,
             operationId: 0,
@@ -241,40 +172,26 @@ export default {
   computed: {
   },
   methods: {
-    tagColor(params) {
-      return status[params].tagColor;
-    },
     tagName(params) {
-      return status[params].tagName;
+      const status = {
+        0: '未发货',
+        1: '已发货',
+        2: '退货申请中',
+        3: '不同意退货',
+        4: '同意退货',
+        5: '商品退回中',
+        6: '商品退回成功',
+      };
+      return status[params];
     },
-    iconFront(params) {
-      return status[params].icon;
-    },
-    inputCourierNumber(orderNumber) {
-      this.courierNumberOrderNumber = orderNumber;
-    },
-    sendCourierNumber() {
-      // eslint-disable-next-line no-alert
-      alert('填写订单编号接口');
-      this.courierNumber = '';
-      this.courierNumberOrderNumber = '';
-    },
-    closeCourierNumber() {
-      this.courierNumber = '';
-      this.courierNumberOrderNumber = '';
-    },
-    approvalAgree(agree, index, cateGoryKey, record) {
+    approvalAgree(agree) {
       if (agree) {
-        this.cardOperationList[cateGoryKey][index].orderStatus = 5;
         // eslint-disable-next-line no-alert
-        alert('同意退货申请接口');
-        this.$message.success(`已同意订单 ${record.orderNumber} 的退货申请`);
+        alert('同意退货');
         return;
       }
       // eslint-disable-next-line no-alert
-      alert('拒绝退货申请接口');
-      this.cardOperationList[cateGoryKey][index].orderStatus = 4;
-      this.$message.warn(`已拒绝订单 ${record.orderNumber} 的退货申请`);
+      alert('不同意退货 ');
     },
   },
   created() {
@@ -282,15 +199,16 @@ export default {
     // alert('请求数据接口');
     // TODO
     buyerApi.login({ loginNumber: '1370099717', password: 'a123456' });
+    buyerApi.register({ loginNumber: '1370099717', password: 'a123456' });
     const unshippedOrderList = [];
     for (let i = 0; i < 100; i += 1) {
       const count = Math.floor(Math.random() * 100);
       unshippedOrderList.push({
         key: i,
-        orderNumber: `${i}`,
+        orderNumber: i,
         orderStatus: '0',
         actualPayment: count * 122,
-        commodityId: `${1}`,
+        commodityId: 1,
         buyerId: Math.floor(Math.random() * 100000),
         buyerName: 'test',
         commodityCount: count,
@@ -310,10 +228,10 @@ export default {
       const count = Math.floor(Math.random() * 100);
       returnOrderList.push({
         key: i,
-        orderNumber: `${i}`,
-        orderStatus: `${Math.floor(Math.random() * 5 + 3)}`,
+        orderNumber: i,
+        orderStatus: Math.floor(Math.random() * 5 + 2),
         actualPayment: count * 122,
-        commodityId: `${1}`,
+        commodityId: 1,
         buyerId: Math.floor(Math.random() * 100000),
         buyerName: 'test',
         commodityCount: count,
@@ -327,6 +245,7 @@ export default {
       });
     }
     this.$set(this.cardOperationList, 'returnOrder', returnOrderList);
+    // this.cardOperationList.unshippedOrder.push()
   },
 };
 </script>
@@ -334,17 +253,10 @@ export default {
 <style lang="scss" scoped>
 .merchant-order {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  background-color: rgb(3, 73, 73);
   .table-wrapper {
     width: 100%;
-  }
-  .order-input {
-    display: inline-block;
-    width: 150px;
-    height: 24px;
-  }
-  .input-courier-number {
-    display: inline-block;
   }
 }
 </style>

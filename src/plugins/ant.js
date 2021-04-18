@@ -9,9 +9,6 @@ import {
   Radio,
   Icon,
   Tag,
-  Input,
-  Message,
-  Descriptions,
 } from 'ant-design-vue';
 
 Vue.use(Button);
@@ -23,8 +20,3 @@ Vue.use(Table);
 Vue.use(Radio);
 Vue.use(Icon);
 Vue.use(Tag);
-Vue.use(Input);
-Vue.use(Message);
-Vue.use(Descriptions);
-
-Vue.prototype.$message = Message;

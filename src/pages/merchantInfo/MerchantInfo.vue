@@ -1,102 +1,73 @@
 <template>
-  <div class="merchant-info">
-    <a-descriptions title="卖家信息" bordered>
-      <a-descriptions-item label="卖家名称">
-        <span v-if="!editInfo">
-          {{ infoData.merchantName }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <a-descriptions-item label="卖家ID">
-        <span v-if="!editInfo">
-          {{ infoData.merchantId }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <a-descriptions-item label="账号">
-        <span v-if="!editInfo">
-          {{ infoData.merchantNumber }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <a-descriptions-item label="卖家邀请码">
-        <span v-if="!editInfo">
-          {{ infoData.invitationCode }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <a-descriptions-item label="卖家商品数量">
-        <span v-if="!editInfo">
-          {{ infoData.commodiityCount }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <a-descriptions-item label="卖家已成交订单总数量">
-        <span v-if="!editInfo">
-          {{ infoData.successAllOrderCount }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <a-descriptions-item label="卖家当月成交订单数量" :span="5">
-        <span v-if="!editInfo">
-          {{ infoData.successCurMonthOrderCount }}
-        </span>
-        <a-input v-else></a-input>
-      </a-descriptions-item>
-      <!-- <a-descriptions-item label="Config Info" :span="5">
-        Data disk type: MongoDB
-        <br />
-        Database version: 3.4
-        <br />
-        Package: dds.mongo.mid
-        <br />
-        Storage space: 10 GB
-        <br />
-        Replication factor: 3
-        <br />1011 01 Region: East China 1<br />
-      </a-descriptions-item> -->
-    </a-descriptions>
-    <a-button style="margin: 20px 20px 0 0" @click="editInfo = !editInfo"
-      >修改信息</a-button
-    >
-    <a-button style="margin: 20px 20px 0 0" type="link">更改密码</a-button>
+  <div class="merchantinfo-wrapper">
+    <div class="myCommodity">
+      <div class="myCommodity-title">
+        <h2 class="myCommodity-title-h">我的商品</h2>
+      </div>
+      <div class="mycommodity-content">
+        <w-card @cardClick="cardClick" cardWidth="600" cardHeight="600">
+          <template v-slot:cardItemIntroduction="cardItemIntroduction">
+            <div class="card-item-info" @click.stop="">
+              <div class="card-item-info-title">
+                <label for="">标题:</label>
+                <input
+                  v-if="isEdit"
+                  type="text"
+                  placeholder="请输入标题"
+                  v-model="cardItemIntroduction.info.operationTitle"
+                />
+                <span v-else>{{ cardItemIntroduction.info.operationTitle }}</span>
+              </div>
+            </div>
+          </template>
+        </w-card>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import WCard from '@/components/CommodityCard';
+
 export default {
+  components: {
+    WCard,
+  },
   data() {
     return {
-      infoData: {},
-      editData: {},
-      editInfo: false,
+      isEdit: true,
     };
   },
-  created() {
-    // alert('商家信息接口');
-    this.infoData = {
-      merchantName: 'test-wu',
-      merchantId: '666666',
-      merchantNumber: '1370099717',
-      invitationCode: '102988',
-      commodiityCount: 666,
-      successAllOrderCount: 6666,
-      successCurMonthOrderCount: 666,
-    };
-    this.editData = this.infoData;
+  methods: {
+    cardClick(operation) {
+      const { commodityId } = operation;
+      this.$router.push({ name: 'DetailPage', query: { commodityId } });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.merchant-info {
+.merchantinfo-wrapper {
   width: 100%;
-  height: 100%;
-  background-color: #fff;
-  text-align: left;
-  padding: 20px;
-  .ant-input{
-    height: 21px;
+  background-color: rgb(52, 52, 129);
+
+  .mycommodity {
+    &-title {
+      &-h {
+        color: #fff;
+      }
+    }
+    &-content {
+      width: 100%;
+
+      .card-item-info {
+        text-align: left;
+        width: 500px;
+        height: 40px;
+        background-color: blue;
+      }
+    }
   }
 }
 </style>

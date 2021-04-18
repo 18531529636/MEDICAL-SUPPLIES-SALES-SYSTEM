@@ -8,6 +8,18 @@
       >
         {{ page.label }}
       </li>
+      <!-- <li
+        :class="{ 'nav-item': true, active: this.$route.name === 'Cart' }"
+        @click="changePage('Cart')"
+      >
+        购物信息
+      </li>
+      <li
+        :class="{ 'nav-item': true, active: this.$route.name === 'Info' }"
+        @click="changePage('Info')"
+      >
+        个人信息
+      </li> -->
     </ul>
   </div>
 </template>
@@ -39,8 +51,8 @@ export default {
   width: 100%;
   height: 100%;
   box-shadow: 0 0 6px #ddd;
-  color: #aaa;
-  background-color: #fff;
+  color: #eee;
+  background-color: blue;
 
   .nav {
     width: 100%;
@@ -60,13 +72,12 @@ export default {
       border-radius: 8px;
       margin-bottom: 20px;
       &.active {
-        background-color: rgb(63, 194, 194);
-        color: rgb(0, 235, 235);
+        background-color: deeppink;
       }
 
       &:not(.active):hover {
-        color: rgb(0, 161, 161);
-        background-color: rgb(144, 242, 255);
+        color: rgb(5, 187, 187);
+        background-color: rgb(241, 222, 198);
       }
     }
   }

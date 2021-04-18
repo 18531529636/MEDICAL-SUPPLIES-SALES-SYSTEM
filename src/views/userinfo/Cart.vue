@@ -1,0 +1,299 @@
+<template>
+  <div class="cart-wrapper">
+    <div class="cart">
+      <div class="cart-cart">
+        <div class="cart-cart">
+          <div class="cart-cart-title">
+            <h3>购物车</h3>
+          </div>
+          <div class="cart-cart-table">
+            <a-table
+              :rowKey="(record) => record.commodityId"
+              :columns="columns"
+              :data-source="dataSource"
+              :row-selection="rowSelection"
+              :pagination="false"
+              :scroll="{ y: 350 }"
+            >
+              <span slot="marketvalue" slot-scope="text">
+                {{ text }}
+              </span>
+              <span slot="handler" slot-scope="text, record, index">
+                <a href="javascript:;" @click="deleteOperation(record, index)"
+                  >删除</a
+                >
+              </span>
+            </a-table>
+          </div>
+          <div class="cart-cart-pay">
+            <div class="alltotalprice">
+              <span class="alltotalprice-label">总价为：</span>
+              <span class="alltotalprice-price">{{ allTotalPrice }}</span>
+            </div>
+            <div class="cart-cart-pay-type">
+              <a-radio-group
+                v-model="payType"
+                default-value="alipay"
+                button-style="solid"
+              >
+                <a-radio-button value="alipay"> 支付宝 </a-radio-button>
+                <a-radio-button value="tencentpay"> 微信 </a-radio-button>
+              </a-radio-group>
+            </div>
+            <a-button type="primary" @click.stop="qrShow = true">支付</a-button>
+            <div class="QRcode" v-show="qrShow">
+              <span class="QRcode-price">总价：{{ allTotalPrice }}</span>
+              <span class="close" @click.stop="qrShow = false">关闭</span>
+              <div class="qr">
+                <img :src="paySrc.src" :alt="paySrc.alt" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cart-commodity-status">
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+const tencentPay = {
+  src: '@/components/CommodityCard/首页-医疗器械1.jpg',
+  alt: '微信支付',
+};
+const aliPay = {
+  src: './statistic/tencentpay.jpg',
+  alt: '支付宝支付',
+};
+
+export default {
+  data() {
+    return {
+      qrShow: false,
+      selectedRows: [],
+      payType: 'alipay',
+      columns: [
+        {
+          title: '名称',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: '市场价',
+          key: 'marketValue',
+          dataIndex: 'marketValue',
+          scopedSlots: { customRender: 'marketValue' },
+        },
+        {
+          title: '会员价',
+          dataIndex: 'memberValue',
+          key: 'memberValue',
+        },
+        {
+          title: '数量',
+          dataIndex: 'count',
+          key: 'count',
+        },
+        {
+          title: '总价(会员价)',
+          dataIndex: 'totalPrice',
+          key: 'totalPrice',
+        },
+        {
+          title: '操作',
+          scopedSlots: { customRender: 'handler' },
+          key: 'handler',
+        },
+      ],
+    };
+  },
+  watch: {
+    dataSource: {
+      handler(val) {
+        const data = Array.from(this.selectedRows);
+        const stateData = Array.from(val);
+        this.selectedRows = data
+          .filter((item) => stateData.findIndex((i) => i.commodityId === item.commodityId) !== -1);
+      },
+      deep: true,
+    },
+  },
+  computed: {
+    dataSource: {
+      get() {
+        const data = [];
+        this.$store.state.commodityList.forEach((item) => {
+          const obj = {
+            ...item,
+            totalPrice: item.count * item.memberValue,
+          };
+          data.push(obj);
+        });
+        return data;
+      },
+      set(val) {
+        console.log(val);
+      },
+    },
+    paySrc() {
+      if (this.payType === 'alipay') {
+        return aliPay;
+      }
+      if (this.payType === 'tencentpay') {
+        return tencentPay;
+      }
+      return false;
+    },
+    allTotalPrice() {
+      let price = 0;
+      this.selectedRows.forEach((item) => {
+        price += item.totalPrice;
+      });
+      return price;
+    },
+    rowSelection() {
+      return {
+        onChange: (selectedRowKeys, selectedRows) => {
+          this.selectedRows = selectedRows;
+        },
+      };
+    },
+  },
+  methods: {
+    deleteOperation(record) {
+      this.$store.commit('DELETE_COMMODITY', { commodity: record });
+    },
+  },
+  created() {
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.cart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(172, 91, 134, 0.3);
+
+  .cart {
+    margin: 0 auto;
+    width: 80%;
+    height: 100%;
+
+    &-cart {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background-color: brown;
+
+      &-title {
+        display: block;
+        width: 100%;
+        height: 50px;
+        text-align: left;
+        padding: 5px 20px;
+        border-bottom: 2px solid #999;
+
+        h3 {
+          color: #fff;
+          font-size: 18px;
+        }
+      }
+
+      &-table{
+        height: 400px;
+      }
+
+      &-pay {
+        background-color: rgb(119, 119, 218);
+        position: relative;
+
+        margin-top: 10px;
+        text-align: left;
+        height: 30px;
+
+        .alltotalprice {
+          position: relative;
+          display: inline-block;
+          padding: 0 30px;
+          height: 30px;
+          line-height: 30px;
+
+          &-label {
+            position: relative;
+            display: inline-block;
+            color: #fff;
+            font-size: 16px;
+            height: 30px;
+            line-height: 30px;
+          }
+
+          &-price {
+            position: relative;
+            display: inline-block;
+            color: crimson;
+            font-size: 20px;
+            font-weight: bolder;
+            height: 30px;
+            line-height: 30px;
+          }
+        }
+
+        &-type {
+          display: inline-block;
+          position: absolute;
+          left: 300px;
+          padding: 0 20px;
+        }
+
+        button {
+          position: absolute;
+          right: 0;
+        }
+
+        .QRcode {
+          display: inline-block;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          width: 400px;
+          height: 400px;
+          background-color: rgba(100, 100, 148, 0.8);
+
+          &-price {
+            position: relative;
+            display: inline-block;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bolder;
+            color: red;
+          }
+          .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: #111;
+            cursor: pointer;
+          }
+          .qr {
+            position: relative;
+            margin: 0 auto;
+            width: 270px;
+            height: 270px;
+
+            img {
+              position: relative;
+              width: 270px;
+              height: 270px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

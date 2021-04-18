@@ -209,7 +209,8 @@ export default {
 .card-wrapper {
   position: relative;
   margin: 0 auto;
-  width: 100%;
+  width: 1411px;
+  padding-bottom: 50px;
 
   .card {
     position: relative;
@@ -226,17 +227,14 @@ export default {
       width: 100%;
       height: 50px;
       text-align: left;
-      background-color: #fff;
+      background-color: #eee;
       padding: 0 10px;
       margin-bottom: 20px;
 
       &-title {
-        height: 50px;
         line-height: 50px;
-        display: inline-block;
         font-size: 20px;
         font-weight: bolder;
-        border-bottom: 3px solid rgb(101, 190, 231);
       }
     }
 
@@ -259,6 +257,7 @@ export default {
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
+          // background-color: chartreuse;
         }
       }
 
