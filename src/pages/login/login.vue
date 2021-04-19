@@ -6,10 +6,31 @@
 
 <script>
 import LoginBox from '@/components/LoginBox';
+import sallerApi from '@/api/saller';
 
 export default {
   components: {
     LoginBox,
+  },
+  provide: {
+    loginFn(loginNumber, passWord) {
+      return new Promise((resolve, rejcet) => {
+        sallerApi.login({ loginNumber, passWord }).then((response) => {
+          resolve(response);
+        }).catch((err) => {
+          rejcet(err);
+        });
+      });
+    },
+    registerFn(obj) {
+      return new Promise((resolve, rejcet) => {
+        sallerApi.register(obj).then((response) => {
+          resolve(response);
+        }).catch((err) => {
+          rejcet(err);
+        });
+      });
+    },
   },
 };
 </script>

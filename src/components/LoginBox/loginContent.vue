@@ -46,6 +46,8 @@ export default {
   },
   watch: {
   },
+  created() {
+  },
   methods: {
     changeloginTypeHandle(type) {
       this.loginType = type;

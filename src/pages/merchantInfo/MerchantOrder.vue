@@ -86,9 +86,8 @@
 </template>
 
 <script>
-import buyerApi from '@/api/buyer';
+import sallerApi from '@/api/saller';
 import WCard from '@/components/CommodityCard';
-import service from '@/api/index';
 
 const status = {
   0: { tagName: '未发货', tagColor: 'geekblue' },
@@ -282,14 +281,7 @@ export default {
     // eslint-disable-next-line no-alert
     // alert('请求数据接口');
     // TODO
-    buyerApi.login({ loginNumber: '1370099717', password: 'a123456' });
-    service({
-      mothod: 'post',
-      url: '/buyer/login',
-      data: {
-        loginNumber: '1370099717', password: 'a123456',
-      },
-    });
+    sallerApi.login({ loginNumber: '1370099717', password: 'a123456' });
     const unshippedOrderList = [];
     for (let i = 0; i < 100; i += 1) {
       const count = Math.floor(Math.random() * 100);

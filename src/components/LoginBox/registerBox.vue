@@ -1,19 +1,25 @@
 <template>
   <div class="input-box">
     <input
-      v-model="userId"
+      v-model="loginNumber"
       placeholder="请输入账号"
       class="user-id"
       type="text"
     />
     <input
-      v-model="userPwd"
+      v-model="mailBox"
+      placeholder="请输入邮箱"
+      class="user-mailbox"
+      type="text"
+    />
+    <input
+      v-model="passWord"
       placeholder="请输入密码"
       class="user-pwd"
       type="text"
     />
     <input
-      v-model="userName"
+      v-model="sallerName"
       placeholder="请输入姓名"
       class="user-name"
       type="text"
@@ -33,8 +39,14 @@
       class="user-detailed-address"
       type="text"
     />
+    <input
+      v-model="verificationCode"
+      placeholder="请输入邀请码"
+      class="user-detailed-address"
+      type="text"
+    />
     <div class="user-login">
-      <a-button type="default">注册</a-button>
+      <a-button type="default" @click="registerClick">注册</a-button>
     </div>
   </div>
 </template>
@@ -43,9 +55,11 @@
 export default {
   data() {
     return {
-      userId: '',
-      userPwd: '',
-      userName: '',
+      loginNumber: '',
+      passWord: '',
+      sallerName: '',
+      mailBox: '',
+      verificationCode: '',
       userAddress: '',
       userDetailedAddress: '',
       options: [
@@ -99,7 +113,36 @@ export default {
         (option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1,
       );
     },
+    registerClick() {
+      const {
+        loginNumber, passWord, sallerName,
+        userAddress, userDetailedAddress, mailBox, verificationCode,
+      } = this;
+      const obj = {
+        loginNumber,
+        passWord,
+        sallerName,
+        userAddress,
+        userDetailedAddress,
+        mailBox,
+        verificationCode,
+      };
+      this.registerFn(obj).then((response) => {
+        const { code, msg } = response.data;
+        if (code === 0) {
+          this.$message.success('注册成功');
+          // 跳转
+          return;
+        }
+        this.$message.error(msg);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
   },
+  inject: [
+    'registerFn',
+  ],
 };
 </script>
 
@@ -108,12 +151,13 @@ export default {
   position: relative;
   width: 80%;
   height: 100%;
-  padding-top: 40px;
+  padding-top: 10px;
   text-align: left;
   .user-id,
   .user-pwd,
   .user-name,
-  .user-detailed-address {
+  .user-detailed-address,
+  .user-mailbox {
     position: relative;
     margin: 20px 20px 0 0;
     width: 40%;
@@ -155,7 +199,7 @@ export default {
     display: inline-block;
     width: 100%;
     text-align: left;
-    top: 73%;
+    top: 80%;
     button {
       left: 15%;
     }

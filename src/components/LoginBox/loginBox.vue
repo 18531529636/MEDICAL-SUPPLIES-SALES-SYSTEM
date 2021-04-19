@@ -1,21 +1,56 @@
 <template>
   <div class="input-box">
-    <input placeholder="请输入账号" class="user-id" type="text" />
-    <input placeholder="请输入密码" class="user-pwd" type="text" />
+    <input
+      placeholder="请输入账号"
+      v-model="loginNumber"
+      v-filter-space="loginNumber"
+      class="user-id"
+      type="text"
+    />
+    <input
+      placeholder="请输入密码"
+      v-model="passWord"
+      v-filter-space="passWord"
+      class="user-pwd"
+      type="text"
+    />
     <div class="user-login">
-      <a-button type="default" @click="checkLogin">登录</a-button>
+      <a-button type="default" @click="checkLogin(loginNumber,passWord)">登录</a-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      loginNumber: '',
+      passWord: '',
+    };
+  },
+  props: {
+    login: {
+      type: Object,
+      default: () => { },
+    },
+  },
+  inject: [
+    'loginFn',
+  ],
   methods: {
-    checkLogin() {
-      // eslint-disable-next-line no-constant-condition
-      if (true) {
-        this.$router.push({ name: 'Merchantinfo' });
-      }
+    checkLogin(loginNumber, passWord) {
+      this.loginFn(loginNumber, passWord).then((response) => {
+        const { code, msg } = response.data;
+        if (code === 0) {
+          this.$message.success('登陆成功');
+          this.$router.push({ name: 'Merchantinfo' });
+        } else {
+          this.$message.error(msg);
+        }
+      }).catch((err) => {
+        console.log(err);
+        this.$message.error('登录失败');
+      });
     },
   },
 };
