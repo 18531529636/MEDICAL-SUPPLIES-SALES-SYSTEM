@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     merchantName() {
-      return 'www';
+      return this.$store.state.loginData.userName;
     },
   },
   methods: {

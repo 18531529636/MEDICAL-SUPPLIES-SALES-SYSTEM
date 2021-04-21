@@ -61,7 +61,7 @@ $userTransitionTime: 0.3s;
   .user {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 400px;
     top: 2%;
     background-color: #f2f5f5;
     border-radius: 3px;
@@ -70,8 +70,7 @@ $userTransitionTime: 0.3s;
       position: absolute;
       width: 100%;
       height: 60%;
-      background-color: blanchedalmond;
-      top: 110px;
+      top: 200px;
       padding: 10px 50px;
       display: flex;
       justify-content: space-between;

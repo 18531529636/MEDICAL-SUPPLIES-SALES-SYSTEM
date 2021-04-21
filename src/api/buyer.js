@@ -11,4 +11,9 @@ export default {
     method: 'post',
     data,
   }),
+  getVerificationCode: (params) => service({
+    method: 'get',
+    url: '/getVerificationCode',
+    params,
+  }),
 };

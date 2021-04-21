@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="operation-box">
-        <component :is="loginComponent"></component>
+        <component @changHomeContent="changHomeContent" :is="loginComponent"></component>
       </div>
     </div>
   </div>
@@ -52,6 +52,9 @@ export default {
     changeloginTypeHandle(type) {
       this.loginType = type;
     },
+    changHomeContent() {
+      this.$emit('changHomeContent');
+    },
   },
 };
 </script>
@@ -64,20 +67,20 @@ $transitionTime: 0.5s;
   z-index: 2;
   position: relative;
   width: 90%;
-  height: 100%;
+  height: calc(100% - 520px);
   margin: 0 auto;
   padding-top: 5%;
 
   .login {
     position: relative;
     width: 100%;
-    height: 40%;
+    height: 450px;
     top: 2%;
     background-color: #f2f5f5;
     border-radius: 3px;
     .operation {
       top: 40%;
-      height: 50%;
+      // height: 50%;
       width: 30%;
       position: relative;
       text-align: left;
@@ -111,63 +114,12 @@ $transitionTime: 0.5s;
     }
     .operation-box {
       width: 60%;
-      height: 80%;
+      height: 75%;
       background-color: #fff;
       position: absolute;
-      top: 15%;
+      top: 20%;
       right: 50px;
     }
   }
-  // .wrapper {
-  //   position: relative;
-  //   left: -5%;
-  //   top: 5%;
-  //   width: 110%;
-  //   height: 50%;
-  //   padding: 20px 0;
-  //   .drug,
-  //   .apparatus {
-  //     position: relative;
-  //     width: 40%;
-  //     height: 100%;
-  //     display: inline-block;
-  //     margin: 0 10px;
-  //     cursor: pointer;
-  //   }
-  //   .drug span,
-  //   .apparatus span {
-  //     position: absolute;
-  //     bottom: 50px;
-  //     left: 40px;
-  //     color: #fff;
-  //     font-size: 20px;
-  //     font-weight: bolder;
-  //   }
-  //   .drug {
-  //     background-image: url("../image/首页-医疗器械.jpg");
-  //     background-repeat: no-repeat;
-  //     background-size: 100% 100%;
-  //   }
-  //   .apparatus {
-  //     background-image: url("../image/首页-医药1.jpg");
-  //     background-repeat: no-repeat;
-  //     background-size: 100% 100%;
-  //   }
-
-  //   .drug:hover,
-  //   .apparatus:hover {
-  //     -webkit-transform: translateY($hoverY);
-  //     -ms-transform: translateY($hoverY);
-  //     transform: translateY($hoverY);
-  //     box-shadow: 0 0 10px #999;
-  //     -webkit-box-shadow: 0 0 10px #999;
-  //     transition: all $transitionTime ease-in-out;
-  //     -webkit-transition: all $transitionTime ease-in-out;
-  //     span {
-  //       transition: font-size 0.3s;
-  //       font-size: 30px;
-  //     }
-  //   }
-  // }
 }
 </style>

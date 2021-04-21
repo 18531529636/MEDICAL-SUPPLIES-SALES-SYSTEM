@@ -7,24 +7,31 @@
       type="text"
     />
     <input
+      v-model="passWord"
+      type="password"
+      placeholder="请输入密码"
+      class="user-pwd"
+    />
+    <input
       v-model="mailBox"
       placeholder="请输入邮箱"
       class="user-mailbox"
       type="text"
     />
+    <a-button
+      class="mail-send"
+      type="link"
+      size="small"
+      @click="sendMail"
+      v-if="userType() === 'buyer'"
+      >发送邮箱验证码</a-button
+    >
     <input
-      v-model="passWord"
-      placeholder="请输入密码"
-      class="user-pwd"
-      type="text"
-    />
-    <input
-      v-model="sallerName"
+      v-model="userName"
       placeholder="请输入姓名"
       class="user-name"
       type="text"
     />
-    <!-- <input v-model="userAddress" placeholder="请选择地址" class="user-address" type="text" /> -->
     <a-cascader
       :options="options"
       :show-search="{ filter }"
@@ -32,17 +39,19 @@
       class="user-address"
       expand-trigger="hover"
       @change="select"
+      v-if="userType() === 'buyer'"
     />
     <input
       v-model="userDetailedAddress"
       placeholder="请输入具体地址"
       class="user-detailed-address"
       type="text"
+      v-if="userType() === 'buyer'"
     />
     <input
       v-model="verificationCode"
       placeholder="请输入邀请码"
-      class="user-detailed-address"
+      class="user-verificationCode"
       type="text"
     />
     <div class="user-login">
@@ -57,7 +66,7 @@ export default {
     return {
       loginNumber: '',
       passWord: '',
-      sallerName: '',
+      userName: '',
       mailBox: '',
       verificationCode: '',
       userAddress: '',
@@ -103,6 +112,11 @@ export default {
       ],
     };
   },
+  inject: [
+    'registerFn',
+    'userType',
+    'sendVerification',
+  ],
   methods: {
     select(val) {
       this.userAddress = val;
@@ -113,25 +127,58 @@ export default {
         (option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1,
       );
     },
+    sendMail() {
+      this.sendVerification({ mailBox: this.mailBox }).then((response) => {
+        const { code, msg } = response.data;
+        if (code === 0) {
+          this.$message.success(msg);
+          console.log('sdsa');
+          if (this.userType() === 'saller') {
+            this.$router.push({ name: 'Merchantinfo' });
+          }
+          this.$emit('changHomeContent');
+          return;
+        }
+        this.$message.error(msg);
+      }).catch((err) => {
+        this.$message.error('请求错误');
+        console.log(err);
+      });
+    },
     registerClick() {
       const {
-        loginNumber, passWord, sallerName,
+        loginNumber, passWord, userName,
         userAddress, userDetailedAddress, mailBox, verificationCode,
       } = this;
       const obj = {
-        loginNumber,
-        passWord,
-        sallerName,
-        userAddress,
-        userDetailedAddress,
-        mailBox,
-        verificationCode,
-      };
+        saller: {
+          loginNumber,
+          passWord,
+          sallerName: userName,
+          userAddress,
+          userDetailedAddress,
+          mailBox,
+          verificationCode,
+        },
+        buyer: {
+          loginNumber,
+          passWord,
+          buyerName: userName,
+          userAddress,
+          userDetailedAddress,
+          mailBox,
+          verificationCode,
+        },
+      }[this.userType()];
       this.registerFn(obj).then((response) => {
         const { code, msg } = response.data;
         if (code === 0) {
           this.$message.success('注册成功');
-          // 跳转
+          this.$store.commit('SET_LOGINCOOKIE');
+          if (this.userType() === 'saller') {
+            this.$router.push({ name: 'Merchantinfo' });
+          }
+          this.$emit('changHomeContent');
           return;
         }
         this.$message.error(msg);
@@ -140,24 +187,26 @@ export default {
       });
     },
   },
-  inject: [
-    'registerFn',
-  ],
 };
 </script>
 
 <style lang="scss" scoped>
 .input-box {
+  display: flex;
+  flex-wrap: wrap;
   position: relative;
   width: 80%;
   height: 100%;
   padding-top: 10px;
   text-align: left;
+
   .user-id,
   .user-pwd,
   .user-name,
   .user-detailed-address,
-  .user-mailbox {
+  .user-mailbox,
+  .user-verificationCode {
+    display: inline-block;
     position: relative;
     margin: 20px 20px 0 0;
     width: 40%;
@@ -172,6 +221,7 @@ export default {
 
   .user-address {
     position: relative;
+    display: inline-block;
     margin: 20px 20px 0 0;
     width: 40%;
     height: 40px;
@@ -186,22 +236,30 @@ export default {
       color: rgb(112, 110, 112);
     }
   }
-
+  .mail-send {
+    position: absolute;
+    right: -50px;
+    top: 40px;
+  }
   .user-id:focus,
   .user-pwd:focus,
   .user-name:focus,
-  .user-detailed-address:focus {
+  .user-mailbox:focus,
+  .user-detailed-address:focus,
+  .user-verificationCode:focus {
     transition: border 0.3s ease-in-out;
     border-bottom: 1.5px solid #40a9ff;
   }
   .user-login {
     position: absolute;
     display: inline-block;
-    width: 100%;
+    // width: 40%;
     text-align: left;
     top: 80%;
+    right: 50px;
     button {
-      left: 15%;
+      // left: 15%;
+      width: 100px;
     }
   }
 }

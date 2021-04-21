@@ -31,6 +31,18 @@ export default {
         });
       });
     },
+    sendVerification(mailBox) {
+      return new Promise((resolve, reject) => {
+        sallerApi.getInvitationCode(mailBox).then((response) => {
+          resolve(response);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+    userType() {
+      return 'saller';
+    },
   },
 };
 </script>

@@ -21,7 +21,7 @@
                 ></a-icon>
               </a-tag>
               <a-button
-                v-if="orderStatus === '3'"
+                v-if="orderStatus === 3"
                 type="link"
                 shape="circle"
                 size="small"
@@ -31,7 +31,7 @@
                 "
               ></a-button>
               <a-button
-                v-if="orderStatus === '3'"
+                v-if="orderStatus === 3"
                 type="link"
                 shape="circle"
                 size="small"
@@ -44,7 +44,7 @@
                 type="primary"
                 size="small"
                 v-if="
-                  orderStatus === '0' &&
+                  orderStatus === 0 &&
                   courierNumberOrderNumber !== record.orderNumber
                 "
                 @click="inputCourierNumber(record.orderNumber)"
@@ -53,7 +53,7 @@
               <div
                 class="input-courier-number"
                 v-if="
-                  orderStatus === '0' &&
+                  orderStatus === 0 &&
                   courierNumberOrderNumber === record.orderNumber
                 "
               >
@@ -277,56 +277,32 @@ export default {
       this.$message.warn(`已拒绝订单 ${record.orderNumber} 的退货申请`);
     },
   },
-  created() {
-    // eslint-disable-next-line no-alert
-    // alert('请求数据接口');
-    // TODO
-    sallerApi.login({ loginNumber: '1370099717', password: 'a123456' });
+  requestOrderList() {
     const unshippedOrderList = [];
-    for (let i = 0; i < 100; i += 1) {
-      const count = Math.floor(Math.random() * 100);
-      unshippedOrderList.push({
-        key: i,
-        orderNumber: `${i}`,
-        orderStatus: '0',
-        actualPayment: count * 122,
-        commodityId: `${1}`,
-        buyerId: Math.floor(Math.random() * 100000),
-        buyerName: 'test',
-        commodityCount: count,
-        name: '手术刀',
-        operationTitle: '削铁如泥的手术刀手术刀手术刀',
-        imgSrc: './statistic/首页-医疗器械1.jpg',
-        actualValue: 123,
-        marketValue: 123,
-        memberValue: 122,
-        operationId: 0,
-      });
-    }
-    this.$set(this.cardOperationList, 'unshippedOrder', unshippedOrderList);
-
     const returnOrderList = [];
-    for (let i = 0; i < 100; i += 1) {
-      const count = Math.floor(Math.random() * 100);
-      returnOrderList.push({
-        key: i,
-        orderNumber: `${i}`,
-        orderStatus: `${Math.floor(Math.random() * 5 + 3)}`,
-        actualPayment: count * 122,
-        commodityId: `${1}`,
-        buyerId: Math.floor(Math.random() * 100000),
-        buyerName: 'test',
-        commodityCount: count,
-        name: '手术刀',
-        operationTitle: '削铁如泥的手术刀手术刀手术刀',
-        imgSrc: './statistic/首页-医疗器械1.jpg',
-        actualValue: 123,
-        marketValue: 123,
-        memberValue: 122,
-        operationId: 0,
+    const shippedOrder = [];
+    sallerApi.getOrder({ sallerId: '996c3ac4961fe0d86e2f' }).then((response) => {
+      const data = response.data.content;
+      data.forEach((item) => {
+        const ele = item;
+        ele.key = ele.orderNumber;
+        if (ele.orderStatus === 0) {
+          unshippedOrderList.push(ele);
+        } else if ([1, 2].includes(ele.orderStatus)) {
+          shippedOrder.push(ele);
+        } else if ([3, 4, 5, 6, 7].includes(ele.orderStatus)) {
+          returnOrderList.push(ele);
+        }
       });
-    }
-    this.$set(this.cardOperationList, 'returnOrder', returnOrderList);
+
+      this.cardOperationList.unshippedOrder = unshippedOrderList;
+      this.cardOperationList.returnOrder = returnOrderList;
+      this.cardOperationList.shippedOrder = shippedOrder;
+      console.log(this.cardOperationList);
+    });
+  },
+  created() {
+    this.requestOrderList();
   },
 };
 </script>

@@ -1,7 +1,12 @@
 <template>
   <div class="content-wrapper">
+    <div class="to-merchant">
+      <a-button type="link" @click="$router.push({ name: 'MerChant' })"
+        >卖家登录</a-button
+      >
+    </div>
     <div class="top-image"></div>
-    <component @logOut="logOut" :is="logined"></component>
+    <component @changHomeContent="changHomeContent" @logOut="logOut" :is="logined"></component>
     <div class="wrapper">
       <div class="drug" @click="toDrug">
         <span>医疗器械 / 用具</span>
@@ -15,7 +20,8 @@
 
 <script>
 import LoginedContent from '@/views/home/logined/loginedContent.vue';
-import LoginContent from '@/views/home/login/loginContent.vue';
+import LoginContent from '@/components/LoginBox';
+import buyerApi from '@/api/buyer';
 
 export default {
   components: {
@@ -24,7 +30,7 @@ export default {
   },
   data() {
     return {
-      haveLogined: true,
+      haveLogined: false,
     };
   },
   computed: {
@@ -43,9 +49,45 @@ export default {
       },
     },
   },
+
+  provide: {
+    loginFn(loginNumber, passWord) {
+      return new Promise((resolve, rejcet) => {
+        buyerApi.login({ loginNumber, passWord }).then((response) => {
+          resolve(response);
+        }).catch((err) => {
+          rejcet(err);
+        });
+      });
+    },
+    registerFn(obj) {
+      return new Promise((resolve, rejcet) => {
+        buyerApi.register(obj).then((response) => {
+          resolve(response);
+        }).catch((err) => {
+          rejcet(err);
+        });
+      });
+    },
+    userType() {
+      return 'buyer';
+    },
+    sendVerification(mailBox) {
+      return new Promise((resolve, reject) => {
+        buyerApi.getVerificationCode(mailBox).then((response) => {
+          resolve(response);
+        }).catch((err) => {
+          reject(err);
+        });
+      });
+    },
+  },
   watch: {
   },
   methods: {
+    changHomeContent() {
+      this.logined = true;
+    },
     toDrug() {
       this.$router.push('drug');
     },
@@ -67,6 +109,12 @@ $transitionTime: 0.5s;
   position: relative;
   height: 100%;
   background-color: #fff;
+  .to-merchant {
+    display: inline-block;
+    position: absolute;
+    z-index: 4;
+    right: 100px;
+  }
   .top-image {
     top: 0;
     right: 0;
@@ -78,12 +126,13 @@ $transitionTime: 0.5s;
     z-index: 3;
   }
   .wrapper {
-    position: relative;
+    position: absolute;
     left: -5%;
-    top: 5%;
+    bottom: 50px;
     width: 110%;
-    height: 50%;
+    height: calc(100% - 600px);
     padding: 20px 0;
+    z-index: 5;
     .drug,
     .apparatus {
       position: relative;

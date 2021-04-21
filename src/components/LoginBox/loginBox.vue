@@ -11,8 +11,8 @@
       placeholder="请输入密码"
       v-model="passWord"
       v-filter-space="passWord"
+      type="password"
       class="user-pwd"
-      type="text"
     />
     <div class="user-login">
       <a-button type="default" @click="checkLogin(loginNumber,passWord)">登录</a-button>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -36,6 +37,7 @@ export default {
   },
   inject: [
     'loginFn',
+    'userType',
   ],
   methods: {
     checkLogin(loginNumber, passWord) {
@@ -43,7 +45,11 @@ export default {
         const { code, msg } = response.data;
         if (code === 0) {
           this.$message.success('登陆成功');
-          this.$router.push({ name: 'Merchantinfo' });
+          this.$store.commit('SET_LOGINCOOKIE');
+          if (this.userType() === 'saller') {
+            this.$router.push({ name: 'Merchantinfo' });
+          }
+          this.$emit('changHomeContent');
         } else {
           this.$message.error(msg);
         }

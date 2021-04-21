@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import AES from '@/utils/AES';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {
     // 购物车列表
     commodityList: [
@@ -71,23 +73,10 @@ export default new Vuex.Store({
         count: 6,
       },
     ],
+    loginData: {},
   },
   mutations: {
     ADD_COMMODITY(state, payload) {
-      // {
-      // commodityId: 1,
-      // name: '手术刀1',
-      // memberValue: 12,
-      // marketValue: 15,
-      // count: 6,
-      // },
-      //       commodityId: 2
-      // imgSrc: "./statistic/首页-医疗器械1.jpg"
-      // marketValue: 123
-      // memberValue: 122
-      // operationId: 0
-      // name: '手术刀'
-      // operationTitle: "削铁如泥的手术刀手术刀手术刀"
       const newVal = payload.commodity;
       const data = Array.from(state.commodityList);
       const index = data.findIndex((item) => item.commodityId === newVal.commodityId);
@@ -110,6 +99,15 @@ export default new Vuex.Store({
       const index = data.findIndex((item) => item.commodityId === payload.commodity.commodityId);
       data.splice(index, 1);
       state.commodityList = data;
+    },
+    SET_LOGINCOOKIE(state) {
+      const tokenCookie = document.cookie.replace(
+        // eslint-disable-next-line no-useless-escape
+        /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
+        '$1',
+      );
+      const loginData = AES.decrypte(unescape(tokenCookie));
+      state.loginData = loginData;
     },
   },
   actions: {},

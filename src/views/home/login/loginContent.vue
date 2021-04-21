@@ -71,20 +71,20 @@ $transitionTime: 0.5s;
   z-index: 2;
   position: relative;
   width: 90%;
-  height: 100%;
+  height: calc(100% - 520px);
   margin: 0 auto;
   padding-top: 5%;
 
   .login {
     position: relative;
     width: 100%;
-    height: 40%;
+    height: 340px;
     top: 2%;
     background-color: #f2f5f5;
     border-radius: 3px;
     .operation {
       top: 40%;
-      height: 50%;
+      // height: 100%;
       width: 30%;
       position: relative;
       text-align: left;

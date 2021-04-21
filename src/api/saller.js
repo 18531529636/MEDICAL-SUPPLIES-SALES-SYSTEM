@@ -11,4 +11,14 @@ export default {
     method: 'post',
     data,
   }),
+  getOrder: (data) => service({
+    method: 'post',
+    url: '/saller/getOrder',
+    data,
+  }),
+  getInvitationCode: (params) => service({
+    method: 'get',
+    url: '/getInvitationCode',
+    params,
+  }),
 };
