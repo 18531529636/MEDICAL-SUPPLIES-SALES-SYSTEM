@@ -8,6 +8,24 @@
     >
       <template v-slot:cardContent="cardContent">
         <div class="table-wrapper">
+          <div
+            class="search-status"
+            v-if="cardContent.cateGoryKey === 'returnOrder'"
+          >
+            <span>订单状态：</span>
+            <a-select
+              v-model="currentReturnStatus"
+              style="width: 160px"
+              @change="handleStatusChange"
+            >
+              <a-select-option
+                v-for="returnStatu in returnStatus"
+                :key="returnStatu.value"
+              >
+                {{ returnStatu.label }}
+              </a-select-option>
+            </a-select>
+          </div>
           <a-table
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
@@ -27,7 +45,7 @@
                 size="small"
                 icon="check"
                 @click="
-                  approvalAgree(true, index, cardContent.cateGoryKey, record)
+                  approvalAgree(true, record)
                 "
               ></a-button>
               <a-button
@@ -37,7 +55,7 @@
                 size="small"
                 icon="close"
                 @click="
-                  approvalAgree(false, index, cardContent.cateGoryKey, record)
+                  approvalAgree(false, record)
                 "
               ></a-button>
               <a-button
@@ -67,7 +85,7 @@
                   shape="circle"
                   size="small"
                   icon="check"
-                  @click="sendCourierNumber"
+                  @click="sendCourierNumber(record, index)"
                 ></a-button>
                 <a-button
                   type="link"
@@ -99,6 +117,7 @@ const status = {
   6: { tagName: '商品退回中', icon: 'reload', tagColor: 'purple' },
   7: { tagName: '商品退回成功', icon: 'smile', tagColor: 'green' },
 };
+
 export default {
   components: {
     WCard,
@@ -120,14 +139,13 @@ export default {
           dataIndex: 'commodityId',
           key: 'commodityId',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'name' },
         },
         {
           title: '商品名称',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'commodityName',
+          key: 'commodityName',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'name' },
+          scopedSlots: { customRender: 'commodityName' },
         },
         {
           title: '商品实际单价',
@@ -155,7 +173,6 @@ export default {
           dataIndex: 'buyerId',
           key: 'buyerId',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'name' },
         },
         {
           title: '买家名称',
@@ -179,66 +196,40 @@ export default {
         { title: '退货订单', key: 'returnOrder' },
         { title: '已发货订单', key: 'shippedOrder' },
       ],
-      cardOperationList: {
-        unshippedOrder: [],
-        returnOrder: [],
-        shippedOrder: [
-          {
-            key: 10,
-            orderNumber: 8,
-            commodityCount: 4,
-            actualPayment: 223,
-            orderStatus: '1',
-            buyerId: 123231,
-            buyerName: 'test',
-            commodityId: 3,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            actualValue: 123,
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            key: 8,
-            orderNumber: 8,
-            commodityCount: 4,
-            actualPayment: 223,
-            orderStatus: '2',
-            buyerId: 123231,
-            buyerName: 'test',
-            commodityId: 3,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            actualValue: 123,
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            key: 9,
-            orderNumber: 9,
-            commodityCount: 4,
-            actualPayment: 223,
-            commodityId: 4,
-            buyerId: 123231,
-            buyerName: 'test',
-            orderStatus: '1',
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            actualValue: 123,
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-        ],
-      },
+      orderList: [],
+      returnStatus: [
+        { value: -1, label: '全部退货状态' },
+        { value: 3, label: status[3].tagName },
+        { value: 4, label: status[4].tagName },
+        { value: 5, label: status[5].tagName },
+        { value: 6, label: status[6].tagName },
+        { value: 7, label: status[7].tagName },
+      ],
+      currentReturnStatus: -1,
     };
   },
   computed: {
+    cardOperationList: {
+      get() {
+        const orderListData = Array.from(this.orderList);
+        const unshippedOrder = orderListData.filter((ele) => ele.orderStatus === 0);
+        const shippedOrder = orderListData.filter((ele) => [1, 2].includes(ele.orderStatus));
+        const returnOrder = this.currentReturnStatus === -1
+          ? orderListData.filter((ele) => [3, 4, 5, 6, 7].includes(ele.orderStatus))
+          : orderListData.filter((ele) => this.currentReturnStatus === ele.orderStatus);
+
+        unshippedOrder.sort((a, b) => a.orderNumber - b.orderNumber);
+        shippedOrder.sort((a, b) => b.orderStatus - a.orderStatus);
+        returnOrder.sort((a, b) => b.setTime - a.setTime);
+        return {
+          unshippedOrder, shippedOrder, returnOrder,
+        };
+      },
+    },
+    sallerId() {
+      return this.$store.state.loginData.userId;
+    },
+
   },
   methods: {
     tagColor(params) {
@@ -253,9 +244,36 @@ export default {
     inputCourierNumber(orderNumber) {
       this.courierNumberOrderNumber = orderNumber;
     },
-    sendCourierNumber() {
-      // eslint-disable-next-line no-alert
-      alert('填写订单编号接口');
+    handleStatusChange(value) {
+      this.currentReturnStatus = value;
+    },
+    changeOrderListItem(orderNumber, key, value) {
+      const orderList = Array.from(this.orderList);
+      orderList.some((item, i) => {
+        if (item.orderNumber === orderNumber) {
+          this.orderList[i][key] = value;
+          return true;
+        }
+        return false;
+      });
+    },
+    sendCourierNumber(record) {
+      sallerApi
+        .setCourierNumber({
+          sallerId: this.sallerId,
+          courierNumber: this.courierNumber,
+          orderNumber: record.orderNumber,
+        })
+        .then((response) => {
+          if (response.data.code === 0) {
+            this.$message.success(response.data.msg);
+            this.changeOrderListItem(record.orderNumber, 'orderStatus', 1);
+            return;
+          }
+          this.$message.error(response.data.msg);
+        }).catch((err) => {
+          console.log(err);
+        });
       this.courierNumber = '';
       this.courierNumberOrderNumber = '';
     },
@@ -263,43 +281,34 @@ export default {
       this.courierNumber = '';
       this.courierNumberOrderNumber = '';
     },
-    approvalAgree(agree, index, cateGoryKey, record) {
-      if (agree) {
-        this.cardOperationList[cateGoryKey][index].orderStatus = 5;
-        // eslint-disable-next-line no-alert
-        alert('同意退货申请接口');
-        this.$message.success(`已同意订单 ${record.orderNumber} 的退货申请`);
-        return;
-      }
-      // eslint-disable-next-line no-alert
-      alert('拒绝退货申请接口');
-      this.cardOperationList[cateGoryKey][index].orderStatus = 4;
-      this.$message.warn(`已拒绝订单 ${record.orderNumber} 的退货申请`);
-    },
-  },
-  requestOrderList() {
-    const unshippedOrderList = [];
-    const returnOrderList = [];
-    const shippedOrder = [];
-    sallerApi.getOrder({ sallerId: '996c3ac4961fe0d86e2f' }).then((response) => {
-      const data = response.data.content;
-      data.forEach((item) => {
-        const ele = item;
-        ele.key = ele.orderNumber;
-        if (ele.orderStatus === 0) {
-          unshippedOrderList.push(ele);
-        } else if ([1, 2].includes(ele.orderStatus)) {
-          shippedOrder.push(ele);
-        } else if ([3, 4, 5, 6, 7].includes(ele.orderStatus)) {
-          returnOrderList.push(ele);
+    approvalAgree(agree, record) {
+      sallerApi.handleReturnApply({
+        sallerId: this.sallerId,
+        isAgree: agree,
+        orderNumber: record.orderNumber,
+      }).then((response) => {
+        if (agree) {
+          this.changeOrderListItem(record.orderNumber, 'orderStatus', 5);
+          this.$message.success(response.data.msg);
+          return;
         }
+        this.changeOrderListItem(record.orderNumber, 'orderStatus', 4);
+        this.$message.error(response.data.msg);
       });
-
-      this.cardOperationList.unshippedOrder = unshippedOrderList;
-      this.cardOperationList.returnOrder = returnOrderList;
-      this.cardOperationList.shippedOrder = shippedOrder;
-      console.log(this.cardOperationList);
-    });
+    },
+    requestOrderList() {
+      sallerApi.getOrder({ sallerId: this.sallerId }).then((response) => {
+        if (response.data.code === -1) {
+          return;
+        }
+        const arr = response.data.content;
+        const data = arr.map((item) => ({
+          ...item,
+          key: item.orderNumber,
+        }));
+        this.orderList = data;
+      });
+    },
   },
   created() {
     this.requestOrderList();
@@ -313,6 +322,13 @@ export default {
   height: 100%;
   .table-wrapper {
     width: 100%;
+    text-align: left;
+    .search-status {
+      display: inline-block;
+      height: 60px;
+      line-height: 40px;
+      margin-left: 20px;
+    }
   }
   .order-input {
     display: inline-block;

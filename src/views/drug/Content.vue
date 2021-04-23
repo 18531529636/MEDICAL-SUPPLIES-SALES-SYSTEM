@@ -17,16 +17,27 @@
         </div>
       </a-carousel>
     </div>
-    <w-card></w-card>
+    <w-card :cateGoryList="cateGoryList" :infoList="infoList"></w-card>
   </div>
 </template>
 
 <script>
 import WCard from '@/components/CommodityCard/CommodityCard.vue';
+import buyerApi from '@/api/buyer';
 
 export default {
   components: {
     WCard,
+  },
+  props: {
+    cateGoryList: {
+      type: Array,
+      default: () => [],
+    },
+    infoList: {
+      type: Array,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -40,7 +51,30 @@ export default {
 
   },
   methods: {
-
+    getCommodity() {
+      buyerApi.getCommodity({ classificationNumber: -1 })
+        .then((response) => {
+          const data = response.data.content;
+          this.infoList = data;
+        }).catch((err) => {
+          console.log(err);
+        });
+    },
+    getClassification() {
+      buyerApi.getClassification()
+        .then((response) => {
+          const cateGoryList = response.data.content.classification;
+          const navMenuList = response.data.content.vagueClassification;
+          this.cateGoryList = cateGoryList;
+          this.navMenuList = navMenuList;
+        }).catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  created() {
+    this.getClassification();
+    this.getCommodity();
   },
   mounted() {
 

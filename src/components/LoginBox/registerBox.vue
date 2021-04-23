@@ -12,12 +12,6 @@
       placeholder="请输入密码"
       class="user-pwd"
     />
-    <input
-      v-model="mailBox"
-      placeholder="请输入邮箱"
-      class="user-mailbox"
-      type="text"
-    />
     <a-button
       class="mail-send"
       type="link"
@@ -30,6 +24,12 @@
       v-model="userName"
       placeholder="请输入姓名"
       class="user-name"
+      type="text"
+    />
+    <input
+      v-model="mailBox"
+      placeholder="请输入邮箱"
+      class="user-mailbox"
       type="text"
     />
     <a-cascader
@@ -132,11 +132,6 @@ export default {
         const { code, msg } = response.data;
         if (code === 0) {
           this.$message.success(msg);
-          console.log('sdsa');
-          if (this.userType() === 'saller') {
-            this.$router.push({ name: 'Merchantinfo' });
-          }
-          this.$emit('changHomeContent');
           return;
         }
         this.$message.error(msg);
@@ -178,6 +173,7 @@ export default {
           if (this.userType() === 'saller') {
             this.$router.push({ name: 'Merchantinfo' });
           }
+          console.log('捕捉注册');
           this.$emit('changHomeContent');
           return;
         }
@@ -239,7 +235,7 @@ export default {
   .mail-send {
     position: absolute;
     right: -50px;
-    top: 40px;
+    top: 120px;
   }
   .user-id:focus,
   .user-pwd:focus,

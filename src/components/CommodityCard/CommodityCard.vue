@@ -1,8 +1,8 @@
 <template>
   <div class="card-wrapper">
     <div class="card" v-for="cateGory in cateGoryList" :key="cateGory.key">
-      <div class="card-title" :id="cateGory.title">
-        <span class="card-title-title">{{ cateGory.title }}</span>
+      <div class="card-title" :id="cateGory.label">
+        <span class="card-title-title">{{ cateGory.label }}</span>
       </div>
 
       <slot :cateGoryKey="cateGory.key" name="cardContent">
@@ -42,7 +42,7 @@
             >
               <div>
                 <h4 class="card-item-introduction-title">
-                  {{ info.operationTitle }}
+                  {{ info.commodityName }}
                 </h4>
               </div>
               <div>

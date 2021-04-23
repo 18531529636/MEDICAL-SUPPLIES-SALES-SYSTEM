@@ -12,6 +12,7 @@ import {
   Input,
   Message,
   Descriptions,
+  Select,
 } from 'ant-design-vue';
 
 Vue.use(Button);
@@ -26,5 +27,6 @@ Vue.use(Tag);
 Vue.use(Input);
 Vue.use(Message);
 Vue.use(Descriptions);
+Vue.use(Select);
 
 Vue.prototype.$message = Message;

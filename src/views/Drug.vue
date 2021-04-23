@@ -3,7 +3,7 @@
     <cart-box />
     <a-layout>
       <a-layout-sider>
-        <nav-menu></nav-menu>
+        <nav-menu :navMenuList="navMenuList"></nav-menu>
       </a-layout-sider>
       <a-layout>
         <a-layout>
@@ -11,8 +11,7 @@
             <nav-header />
           </a-layout-header>
           <a-layout-content>
-            <layout-content></layout-content>
-            <!-- <my-test></my-test> -->
+            <layout-content :cateGoryList="cateGoryList" :infoList="infoList" />
           </a-layout-content>
           <a-layout-footer>
             © 2018 版权所有：常州安康医疗器械有限公司
@@ -30,7 +29,7 @@ import LayoutContent from '@/views/drug/Content.vue';
 import NavMenu from '@/components/NavMenu';
 import NavHeader from '@/components/Header';
 import CartBox from '@/components/CartBox';
-// import MyTest from './test.vue';
+import buyerApi from '@/api/buyer';
 
 export default {
   name: 'Home',
@@ -39,7 +38,13 @@ export default {
     NavHeader,
     CartBox,
     NavMenu,
-    // MyTest,
+  },
+  data() {
+    return {
+      cateGoryList: [],
+      navMenuList: [],
+      infoList: {},
+    };
   },
   methods: {
     toUser(page) {
@@ -49,6 +54,31 @@ export default {
       } else if (page === 'info') {
         this.$router.push({ name: 'Info', query: { commodityId: 1 } });
       }
+    },
+    getCommodity() {
+      buyerApi.getCommodity({ classificationNumber: -1 })
+        .then((response) => {
+          const data = response.data.content;
+          this.infoList = data;
+        }).catch((err) => {
+          console.log(err);
+        });
+    },
+    getClassification() {
+      buyerApi.getClassification()
+        .then((response) => {
+          const cateGoryList = response.data.content.classification;
+          const navMenuList = response.data.content.vagueClassification;
+          console.log(navMenuList);
+          this.cateGoryList = cateGoryList;
+          this.navMenuList = navMenuList;
+        }).catch((err) => {
+          console.log(err);
+        });
+    },
+    created() {
+      this.getClassification();
+      this.getCommodity();
     },
   },
 };

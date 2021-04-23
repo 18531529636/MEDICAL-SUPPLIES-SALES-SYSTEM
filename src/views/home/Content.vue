@@ -6,7 +6,11 @@
       >
     </div>
     <div class="top-image"></div>
-    <component @changHomeContent="changHomeContent" @logOut="logOut" :is="logined"></component>
+    <component
+      @changHomeContent="changHomeContent"
+      @logOut="logout"
+      :is="logined"
+    ></component>
     <div class="wrapper">
       <div class="drug" @click="toDrug">
         <span>医疗器械 / 用具</span>
@@ -49,7 +53,40 @@ export default {
       },
     },
   },
-
+  created() {
+    this.checkLoginStatus();
+  },
+  methods: {
+    checkLoginStatus() {
+      if (Object.keys(this.$store.state.loginData).length) {
+        this.logined = true;
+        return;
+      }
+      this.logined = false;
+    },
+    changHomeContent() {
+      this.logined = true;
+    },
+    toDrug() {
+      this.$router.push('drug');
+    },
+    toApparatus() {
+      this.$router.push('apparatus');
+    },
+    logout() {
+      console.log('logout');
+      const { loginNumber } = this.$store.state.loginData;
+      buyerApi.logout({ loginNumber }).then((response) => {
+        console.log(response);
+        if (response.data.code === 0) {
+          this.$message.success(response.data.msg);
+          return;
+        }
+        this.$message.error(response.data.msg);
+      });
+      this.logined = false;
+    },
+  },
   provide: {
     loginFn(loginNumber, passWord) {
       return new Promise((resolve, rejcet) => {
@@ -83,20 +120,6 @@ export default {
     },
   },
   watch: {
-  },
-  methods: {
-    changHomeContent() {
-      this.logined = true;
-    },
-    toDrug() {
-      this.$router.push('drug');
-    },
-    toApparatus() {
-      this.$router.push('apparatus');
-    },
-    logOut() {
-      this.logined = false;
-    },
   },
 };
 </script>
