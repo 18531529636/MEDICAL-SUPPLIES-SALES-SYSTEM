@@ -16,6 +16,16 @@ export default {
     method: 'post',
     data,
   }),
+  getCart: (data) => service({
+    url: '/buyer/getCart',
+    method: 'post',
+    data,
+  }),
+  addCart: (data) => service({
+    url: '/buyer/addCart',
+    method: 'post',
+    data,
+  }),
   getVerificationCode: (params) => service({
     method: 'get',
     url: '/getVerificationCode',

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import AES from '@/utils/AES';
+import buyerApi from '@/api/buyer';
 
 Vue.use(Vuex);
 
@@ -8,87 +9,22 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     // 购物车列表
-    commodityList: [
-      {
-        commodityId: 1,
-        name: '手术刀1',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 2,
-        name: '手术刀2',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 3,
-        name: '手术刀3',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 4,
-        name: '手术刀4',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 5,
-        name: '手术刀5',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 6,
-        name: '手术刀6',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 7,
-        name: '手术刀7',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 8,
-        name: '手术刀8',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-      {
-        commodityId: 9,
-        name: '手术刀9',
-        memberValue: 12,
-        marketValue: 15,
-        count: 6,
-      },
-    ],
+    commodityList: [],
     loginData: {},
   },
   mutations: {
+    CHANGE_CARTlIST(state, payload) {
+      state.commodityList = payload;
+    },
     ADD_COMMODITY(state, payload) {
-      const newVal = payload.commodity;
       const data = Array.from(state.commodityList);
-      const index = data.findIndex((item) => item.commodityId === newVal.commodityId);
+      const index = data.findIndex((item) => item.commodityNumber === payload.commodityNumber);
       if (index !== -1) {
         data[index].count += 1;
       } else {
         const obj = {
-          commodityId: newVal.commodityId,
-          name: newVal.name,
-          memberValue: newVal.memberValue,
-          marketValue: newVal.marketValue,
-          count: 1,
+          ...payload,
+          key: payload.cartNumber,
         };
         data.push(obj);
       }
@@ -106,10 +42,42 @@ export default new Vuex.Store({
         /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
         '$1',
       );
+      if (!tokenCookie) {
+        state.loginData = {};
+        return;
+      }
       const loginData = AES.decrypte(unescape(tokenCookie));
       state.loginData = loginData;
     },
   },
-  actions: {},
+  actions: {
+    REQUEST_CART(context) {
+      buyerApi.getCart({ buyerId: context.state.loginData.userId }).then((response) => {
+        const respData = response.data.content.map((item) => ({
+          ...item,
+          rowKey: item.commodityNumber,
+        }));
+        context.commit('CHANGE_CARTlIST', respData);
+      });
+    },
+    REQUEST_CARTITEM(context, payload) {
+      if (!Object.keys(context.state.loginData).length) {
+        this.$message.success('请先登录');
+        return;
+      }
+      buyerApi
+        .addCart({
+          buyerId: context.state.loginData.userId,
+          sallerId: payload.sallerId,
+          commodityNumber: payload.commodityNumber,
+        })
+        .then((response) => {
+          console.log(this);
+          // Vue.$message[response.data.code === 0 ? 'success' : 'error'](response.data.msg);
+          context.commit('ADD_COMMODITY', response.data.content[0]);
+          console.log(response.data);
+        });
+    },
+  },
   modules: {},
 });

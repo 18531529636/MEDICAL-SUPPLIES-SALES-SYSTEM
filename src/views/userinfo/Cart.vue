@@ -78,8 +78,8 @@ export default {
       columns: [
         {
           title: '名称',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'commodityName',
+          key: 'commodityName',
         },
         {
           title: '市场价',
@@ -94,13 +94,13 @@ export default {
         },
         {
           title: '数量',
-          dataIndex: 'count',
-          key: 'count',
+          dataIndex: 'commodityCount',
+          key: 'commodityCount',
         },
         {
           title: '总价(会员价)',
-          dataIndex: 'totalPrice',
-          key: 'totalPrice',
+          dataIndex: 'commodityTotalValue',
+          key: 'commodityTotalValue',
         },
         {
           title: '操作',

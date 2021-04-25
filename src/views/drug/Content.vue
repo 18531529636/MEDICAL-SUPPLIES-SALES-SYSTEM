@@ -2,28 +2,42 @@
   <div class="content-wrapper">
     <div class="pic-loop">
       <a-carousel autoplay>
-        <!-- <div class="pic-loop-item" :style="{backgroundIamge: url('')}">1</div> -->
         <div class="pic-loop-item">
-          <h1>1</h1>
+          <img
+            class="pic-loop-item-img"
+            alt=""
+            src="/statistic/首页-医疗器械1.jpg"
+          />
         </div>
         <div class="pic-loop-item">
-          <h1>2</h1>
+          <img
+            class="pic-loop-item-img"
+            alt=""
+            src="/statistic/首页-医疗器械1.jpg"
+          />
         </div>
         <div class="pic-loop-item">
-          <h1>3</h1>
+          <img
+            class="pic-loop-item-img"
+            alt=""
+            src="/statistic/首页-医疗器械1.jpg"
+          />
         </div>
         <div class="pic-loop-item">
-          <h1>4</h1>
+          <img
+            class="pic-loop-item-img"
+            alt=""
+            src="/statistic/首页-医疗器械1.jpg"
+          />
         </div>
       </a-carousel>
     </div>
-    <w-card :cateGoryList="cateGoryList" :infoList="infoList"></w-card>
+    <w-card :cateGoryList="cateGoryList" :infoList="infoList" @buttonClick="addToCart"></w-card>
   </div>
 </template>
 
 <script>
 import WCard from '@/components/CommodityCard/CommodityCard.vue';
-import buyerApi from '@/api/buyer';
 
 export default {
   components: {
@@ -35,7 +49,7 @@ export default {
       default: () => [],
     },
     infoList: {
-      type: Array,
+      type: Object,
       default: () => ({}),
     },
   },
@@ -51,30 +65,11 @@ export default {
 
   },
   methods: {
-    getCommodity() {
-      buyerApi.getCommodity({ classificationNumber: -1 })
-        .then((response) => {
-          const data = response.data.content;
-          this.infoList = data;
-        }).catch((err) => {
-          console.log(err);
-        });
-    },
-    getClassification() {
-      buyerApi.getClassification()
-        .then((response) => {
-          const cateGoryList = response.data.content.classification;
-          const navMenuList = response.data.content.vagueClassification;
-          this.cateGoryList = cateGoryList;
-          this.navMenuList = navMenuList;
-        }).catch((err) => {
-          console.log(err);
-        });
+    addToCart(card) {
+      this.$store.dispatch('REQUEST_CARTITEM', card);
     },
   },
   created() {
-    this.getClassification();
-    this.getCommodity();
   },
   mounted() {
 
@@ -101,6 +96,11 @@ $transitionTime: 0.5s;
       height: 350px;
       line-height: 350px;
       background-color: coral;
+
+      &-img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }

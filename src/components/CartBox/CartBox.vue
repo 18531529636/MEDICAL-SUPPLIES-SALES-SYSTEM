@@ -67,8 +67,8 @@ export default {
       columns: [
         {
           title: '名称',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'commodityName',
+          key: 'commodityName',
         },
         {
           title: '市场价',
@@ -83,13 +83,13 @@ export default {
         },
         {
           title: '数量',
-          dataIndex: 'count',
-          key: 'count',
+          dataIndex: 'commodityCount',
+          key: 'commodityCount',
         },
         {
           title: '总价(会员价)',
-          dataIndex: 'totalPrice',
-          key: 'totalPrice',
+          dataIndex: 'commodityTotalValue',
+          key: 'commodityTotalValue',
         },
         {
           title: '操作',
@@ -103,26 +103,11 @@ export default {
   computed: {
     dataSource: {
       get() {
-        const data = [];
-        this.$store.state.commodityList.forEach((item) => {
-          const obj = {
-            ...item,
-            totalPrice: item.count * item.memberValue,
-          };
-          data.push(obj);
-        });
-        return data;
+        return this.$store.state.commodityList;
       },
       set(val) {
         console.log(val);
       },
-    },
-    rowSelection() {
-      return {
-        onChange: (selectedRowKeys, selectedRows) => {
-          this.selectedRows = selectedRows;
-        },
-      };
     },
   },
   watch: {
@@ -130,7 +115,7 @@ export default {
       handler(val) {
         let count = 0;
         val.forEach((item) => {
-          count += item.count;
+          count += item.commodityCount;
         });
         this.allCount = count;
       },
@@ -142,6 +127,9 @@ export default {
     deleteOperation(record) {
       this.$store.commit('DELETE_COMMODITY', { commodity: record });
     },
+  },
+  created() {
+    this.$store.dispatch('REQUEST_CART');
   },
 };
 </script>
@@ -157,18 +145,15 @@ li {
 }
 
 .cartbox {
-  position: absolute;
+  position: fixed;
   z-index: 9;
   top: 200px;
-  // right: 0;
   right: $hideWidth;
   width: $boxWidth;
-  // height: 300px;
   height: $boxHeight;
   background-color: rgb(59, 165, 156, 0.8);
   text-align: left;
   border-radius: 10px 0 0 10px;
-  // overflow: hidden;
   transition: all 0.3s ease-in-out;
 
   .allCount {

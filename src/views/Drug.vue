@@ -69,17 +69,16 @@ export default {
         .then((response) => {
           const cateGoryList = response.data.content.classification;
           const navMenuList = response.data.content.vagueClassification;
-          console.log(navMenuList);
           this.cateGoryList = cateGoryList;
           this.navMenuList = navMenuList;
         }).catch((err) => {
           console.log(err);
         });
     },
-    created() {
-      this.getClassification();
-      this.getCommodity();
-    },
+  },
+  created() {
+    this.getClassification();
+    this.getCommodity();
   },
 };
 </script>

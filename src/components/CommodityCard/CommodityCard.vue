@@ -1,7 +1,7 @@
 <template>
   <div class="card-wrapper">
     <div class="card" v-for="cateGory in cateGoryList" :key="cateGory.key">
-      <div class="card-title" :id="cateGory.label">
+      <div class="card-title" :id="cateGory.key">
         <span class="card-title-title">{{ cateGory.label }}</span>
       </div>
 
@@ -13,7 +13,7 @@
             height: `${cardHeight}px`,
           }"
           v-for="info in infoList[cateGory.key]"
-          :key="info.commodityId"
+          :key="info.commodityNumber"
           @click.stop="cardClick(info)"
         >
           <div
@@ -88,96 +88,14 @@ export default {
     },
     cateGoryList: {
       type: Array,
-      default: () => [
-        {
-          title: '手术用品',
-          key: 'operation',
-        },
-        {
-          title: '检测器械',
-          key: 'testApparatus',
-        },
-      ],
+      default: () => [],
     },
     infoList: {
       type: Object,
       default: () => ({
         operation: [
-          {
-            commodityId: 1,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            commodityId: 2,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            commodityId: 3,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            commodityId: 4,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
         ],
         testApparatus: [
-          {
-            cataGoryKey: '',
-            commodityId: 1,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            commodityId: 2,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            commodityId: 3,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
-          {
-            commodityId: 4,
-            name: '手术刀',
-            operationTitle: '削铁如泥的手术刀手术刀手术刀',
-            imgSrc: './statistic/首页-医疗器械1.jpg',
-            marketValue: 123,
-            memberValue: 122,
-            operationId: 0,
-          },
         ],
       }),
     },
@@ -243,6 +161,8 @@ export default {
     &-item {
       cursor: pointer;
       background-color: rgb(248, 248, 248);
+      border: 1px solid #eee;
+      border-radius: 10px;
       position: relative;
       padding: 10px;
       margin: 10px 10px;

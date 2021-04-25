@@ -13,6 +13,7 @@
           v-for="(item, itemIndex) in itemList"
           :key="itemIndex"
         >
+          <!-- {{ item }} -->
           <span class="nav-item-title">{{ item.title }}</span>
           <span
             class="nav-item-division"
@@ -52,56 +53,6 @@ export default {
     navMenuList: {
       type: Array,
       default: () => [
-        [
-          {
-            title: '手术1',
-            detailClasification: [
-              {
-                title: '手术用品',
-              }, {
-                title: '手术用品',
-              }, {
-                title: '手术用品',
-              }, {
-                title: '手术用品',
-              }, {
-                title: '手术用品',
-              },
-            ],
-          },
-          {
-            title: '手术2',
-            detailClasification: [{
-              title: '手术用品',
-            }, {
-              title: '手术用品',
-            }, {
-              title: '手术用品3',
-            }, {
-              title: '手术用品1',
-            },
-            ],
-          },
-        ],
-        [
-          {
-            title: '手术3',
-            detailClasification: [{
-              title: '手术用品',
-            }, {
-              title: '手术用品',
-            }, {
-              title: '手术用品',
-            }, {
-              title: '手术用品',
-            }, {
-              title: '手术用品',
-            }, {
-              title: '手术用品',
-            },
-            ],
-          },
-        ],
       ],
     },
   },
@@ -110,6 +61,7 @@ export default {
   methods: {
     mouseenterEvent: debounce(function test(item) {
       this.flexContentShow = true;
+      console.log(item);
       this.hoverNavItem = item;
     }, 300),
     mouseleaveEvent() {

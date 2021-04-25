@@ -13,11 +13,11 @@
         </div>
         <ul class="flex-item-content">
           <li
-            v-for="(i, index) in item.detailText"
+            v-for="(i, index) in item.label"
             :key="index"
             class="flex-item-content-item"
           >
-            <a :href="['#'+i.title]" >{{ i.title }}</a>
+            <a :href="['#' + i.key]">{{ i.label }}</a>
           </li>
         </ul>
       </div>
@@ -34,68 +34,7 @@ export default {
   props: {
     hoverNavItem: {
       type: Array,
-      default: () => [
-        {
-          title: '手术',
-          detailText: [
-            {
-              title: '手术用品',
-              operationList: [
-                {
-                  commodityId: 1,
-                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
-                  imgSrc: './statistic/首页-医疗器械1.jpg',
-                  marketValue: 123,
-                  memberValue: 122,
-                  operationId: 0,
-                },
-                {
-                  commodityId: 2,
-                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
-                  imgSrc: './statistic/首页-医疗器械1.jpg',
-                  marketValue: 123,
-                  memberValue: 122,
-                  operationId: 0,
-                },
-                {
-                  commodityId: 3,
-                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
-                  imgSrc: './statistic/首页-医疗器械1.jpg',
-                  marketValue: 123,
-                  memberValue: 122,
-                  operationId: 0,
-                },
-                {
-                  commodityId: 4,
-                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
-                  imgSrc: './statistic/首页-医疗器械1.jpg',
-                  marketValue: 123,
-                  memberValue: 122,
-                  operationId: 0,
-                },
-                {
-                  commodityId: 5,
-                  operationTitle: '削铁如泥的手术刀手术刀手术刀',
-                  imgSrc: './statistic/首页-医疗器械1.jpg',
-                  marketValue: 123,
-                  memberValue: 122,
-                  operationId: 0,
-                },
-              ],
-            },
-            '手术灯',
-            '手术手套',
-          ],
-        },
-        {
-          title: '手术1',
-          detailText: [
-            '手术刀',
-            '手术灯',
-            '手术手套',
-          ],
-        },
-      ],
+      default: () => [],
     },
     flexContentShow: {
       type: Boolean,

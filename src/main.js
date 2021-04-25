@@ -8,10 +8,21 @@ import '@/plugins/ant-design-style';
 
 Vue.config.productionTip = false;
 
+Vue.use(MyDirective);
+
+Vue.prototype.$checkLoginStatus = function () {
+  if (Object.keys(this.$store.state.loginData).length) {
+    return true;
+  }
+  return false;
+};
+
+Vue.prototype.$initLoginData = function () {
+  this.$store.commit('SET_LOGINCOOKIE');
+};
+
 new Vue({
   router,
   store,
   render: (h) => h(App),
 }).$mount('#app');
-
-Vue.use(MyDirective);

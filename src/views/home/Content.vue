@@ -40,9 +40,6 @@ export default {
   computed: {
     logined: {
       get() {
-        // 此处判断cookie或session等 判断是否已登录
-        // maybe此属性应该为计算属性 动态获取cookie得知是否为已登录状态
-        // const haveLogined = true;
         if (this.haveLogined) {
           return LoginedContent;
         }
@@ -54,16 +51,9 @@ export default {
     },
   },
   created() {
-    this.checkLoginStatus();
+    this.logined = this.$checkLoginStatus();
   },
   methods: {
-    checkLoginStatus() {
-      if (Object.keys(this.$store.state.loginData).length) {
-        this.logined = true;
-        return;
-      }
-      this.logined = false;
-    },
     changHomeContent() {
       this.logined = true;
     },
@@ -74,12 +64,12 @@ export default {
       this.$router.push('apparatus');
     },
     logout() {
-      console.log('logout');
       const { loginNumber } = this.$store.state.loginData;
       buyerApi.logout({ loginNumber }).then((response) => {
         console.log(response);
         if (response.data.code === 0) {
           this.$message.success(response.data.msg);
+          this.$initLoginData();
           return;
         }
         this.$message.error(response.data.msg);

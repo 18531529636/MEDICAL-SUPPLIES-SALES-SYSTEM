@@ -10,20 +10,10 @@ export default {
   components: {
   },
   methods: {
-    initLoginData() {
-      const tokenCookie = document.cookie.replace(
-      // eslint-disable-next-line no-useless-escape
-        /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
-        '$1',
-      );
-      if (tokenCookie) {
-        this.$store.commit('SET_LOGINCOOKIE');
-      }
-    },
   },
   created() {
     // 刷新导致用户信息丢失
-    this.initLoginData();
+    this.$initLoginData();
   },
 };
 </script>

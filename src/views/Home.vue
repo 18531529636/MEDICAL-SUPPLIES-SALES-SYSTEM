@@ -1,6 +1,6 @@
 <template>
   <div class="home" id="components-layout-demo-basic">
-    <cart-box />
+    <cart-box v-if="logined" />
     <a-layout>
       <a-layout-sider>
         <layout-sider></layout-sider>
@@ -32,6 +32,11 @@ export default {
     LayoutSider,
     LayoutContent,
     CartBox,
+  },
+  computed: {
+    logined() {
+      return !!Object.keys(this.$store.state.loginData).length;
+    },
   },
 };
 </script>
@@ -80,6 +85,9 @@ $layoutbg: #ddd;
   background: $layoutbg;
   // padding: 10px 0;
   // padding-bottom: 2px;
+}
+.home{
+  position: relative;
 }
 // #components-layout-demo-basic > .ant-layout:last-child {
 // }
