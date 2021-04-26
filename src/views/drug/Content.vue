@@ -66,7 +66,8 @@ export default {
   },
   methods: {
     addToCart(card) {
-      this.$store.dispatch('REQUEST_CARTITEM', card);
+      console.log(card);
+      this.$store.dispatch('ADD_CARTITEM', card);
     },
   },
   created() {

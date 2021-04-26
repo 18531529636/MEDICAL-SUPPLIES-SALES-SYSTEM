@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import AES from '@/utils/AES';
 import buyerApi from '@/api/buyer';
+import { message } from 'ant-design-vue';
 
 Vue.use(Vuex);
 
@@ -20,21 +21,26 @@ export default new Vuex.Store({
       const data = Array.from(state.commodityList);
       const index = data.findIndex((item) => item.commodityNumber === payload.commodityNumber);
       if (index !== -1) {
-        data[index].count += 1;
+        data[index].commodityCount += 1;
       } else {
         const obj = {
           ...payload,
           key: payload.cartNumber,
         };
-        data.push(obj);
+        data.unshift(obj);
       }
       state.commodityList = data;
     },
     DELETE_COMMODITY(state, payload) {
       const data = Array.from(state.commodityList);
-      const index = data.findIndex((item) => item.commodityId === payload.commodity.commodityId);
-      data.splice(index, 1);
-      state.commodityList = data;
+      const index = data.findIndex((item) => item.cartNumber === payload.cartNumber);
+      if (payload.deleteCount === -1) {
+        data.splice(index, 1);
+        state.commodityList = data;
+        return;
+      }
+      const count = state.commodityList[index].commodityCount - payload.deleteCount;
+      state.commodityList[index].commodityCount = count;
     },
     SET_LOGINCOOKIE(state) {
       const tokenCookie = document.cookie.replace(
@@ -52,17 +58,20 @@ export default new Vuex.Store({
   },
   actions: {
     REQUEST_CART(context) {
+      if (!Object.keys(context.state.loginData).length) {
+        return;
+      }
       buyerApi.getCart({ buyerId: context.state.loginData.userId }).then((response) => {
         const respData = response.data.content.map((item) => ({
           ...item,
-          rowKey: item.commodityNumber,
+          key: item.commodityNumber,
         }));
         context.commit('CHANGE_CARTlIST', respData);
       });
     },
-    REQUEST_CARTITEM(context, payload) {
+    ADD_CARTITEM(context, payload) {
       if (!Object.keys(context.state.loginData).length) {
-        this.$message.success('请先登录');
+        message.error('请先登录');
         return;
       }
       buyerApi
@@ -72,10 +81,20 @@ export default new Vuex.Store({
           commodityNumber: payload.commodityNumber,
         })
         .then((response) => {
-          console.log(this);
-          // Vue.$message[response.data.code === 0 ? 'success' : 'error'](response.data.msg);
-          context.commit('ADD_COMMODITY', response.data.content[0]);
-          console.log(response.data);
+          console.log(response.data.content);
+          message[response.data.code === 0 ? 'success' : 'error'](response.data.msg);
+          context.commit('ADD_COMMODITY', response.data.content);
+        });
+    },
+    DELETE_CARTITEM(context, payload) {
+      console.log(payload);
+      buyerApi
+        .deleteCart({ cartNumber: payload.commodity.cartNumber, deleteCount: payload.deleteCount })
+        .then(() => {
+          context.commit('DELETE_COMMODITY', {
+            cartNumber: payload.commodity.cartNumber,
+            deleteCount: payload.deleteCount,
+          });
         });
     },
   },

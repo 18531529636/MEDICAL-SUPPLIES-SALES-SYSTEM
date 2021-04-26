@@ -12,7 +12,11 @@
       <span>购物车</span>
     </div>
     <div class="cartbox-content" v-show="tableShow">
+      <div v-if="!logined" class="no-data">
+        <span class="no-data-title">请先登录</span>
+      </div>
       <a-table
+        v-else
         :rowKey="(record) => record.commodityId"
         :columns="columns"
         :data-source="dataSource"
@@ -38,26 +42,7 @@ export default {
   props: {
     cartList: {
       type: Array,
-      default: () => [
-        {
-          oparationId: 1,
-          name: '手术刀',
-          unitPirce: 12,
-          count: 6,
-        },
-        {
-          oparationId: 2,
-          name: '手术刀1',
-          unitPirce: 6,
-          count: 4,
-        },
-        {
-          oparationId: 3,
-          name: '手术刀2',
-          unitPirce: 19,
-          count: 2,
-        },
-      ],
+      default: () => [],
     },
   },
   data() {
@@ -109,6 +94,9 @@ export default {
         console.log(val);
       },
     },
+    logined() {
+      return this.$checkLoginStatus();
+    },
   },
   watch: {
     dataSource: {
@@ -125,7 +113,7 @@ export default {
   },
   methods: {
     deleteOperation(record) {
-      this.$store.commit('DELETE_COMMODITY', { commodity: record });
+      this.$store.dispatch('DELETE_CARTITEM', { commodity: record, deleteCount: -1 });
     },
   },
   created() {
@@ -200,6 +188,19 @@ li {
         display: inline-block;
         width: 20%;
         text-align: center;
+      }
+    }
+    .no-data {
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &-title {
+        color: #aaa;
+        font-size: 20px;
       }
     }
 

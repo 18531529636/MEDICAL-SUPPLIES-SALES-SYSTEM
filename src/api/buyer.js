@@ -26,6 +26,16 @@ export default {
     method: 'post',
     data,
   }),
+  deleteCart: (data) => service({
+    url: '/buyer/deleteCart',
+    method: 'post',
+    data,
+  }),
+  getOrder: (data) => service({
+    method: 'post',
+    url: '/buyer/getOrder',
+    data,
+  }),
   getVerificationCode: (params) => service({
     method: 'get',
     url: '/getVerificationCode',

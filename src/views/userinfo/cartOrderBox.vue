@@ -1,5 +1,5 @@
 <template>
-  <div class="merchant-order">
+  <div class="cart-order">
     <w-card
       cardWidth="400"
       cardHeight="800"
@@ -30,39 +30,27 @@
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
           >
-            <span slot="orderStatus" slot-scope="orderStatus, record, index">
+            <span slot="orderStatus" slot-scope="orderStatus, record">
               <a-tag :color="tagColor(orderStatus)">
                 {{ tagName(orderStatus) }}
                 <a-icon
-                  v-if="!['0'].includes(orderStatus)"
+                  v-if="![0].includes(orderStatus)"
                   :type="iconFront(orderStatus)"
                 ></a-icon>
               </a-tag>
               <a-button
-                v-if="orderStatus === 3"
+                v-if="orderStatus === 2"
                 type="link"
                 shape="circle"
                 size="small"
                 icon="check"
-                @click="
-                  approvalAgree(true, record)
-                "
-              ></a-button>
-              <a-button
-                v-if="orderStatus === 3"
-                type="link"
-                shape="circle"
-                size="small"
-                icon="close"
-                @click="
-                  approvalAgree(false, record)
-                "
-              ></a-button>
+                @click="requestReturn(record)"
+              >申请退货</a-button>
               <a-button
                 type="primary"
                 size="small"
                 v-if="
-                  orderStatus === 0 &&
+                  orderStatus === 5 &&
                   courierNumberOrderNumber !== record.orderNumber
                 "
                 @click="inputCourierNumber(record.orderNumber)"
@@ -71,7 +59,7 @@
               <div
                 class="input-courier-number"
                 v-if="
-                  orderStatus === 0 &&
+                  orderStatus === 5 &&
                   courierNumberOrderNumber === record.orderNumber
                 "
               >
@@ -85,7 +73,7 @@
                   shape="circle"
                   size="small"
                   icon="check"
-                  @click="sendCourierNumber(record, index)"
+                  @click="sendCourierNumber(record)"
                 ></a-button>
                 <a-button
                   type="link"
@@ -104,7 +92,7 @@
 </template>
 
 <script>
-import sallerApi from '@/api/saller';
+import buyerApi from '@/api/buyer';
 import WCard from '@/components/CommodityCard';
 
 const status = {
@@ -117,8 +105,8 @@ const status = {
   6: { tagName: '商品退回中', icon: 'reload', tagColor: 'purple' },
   7: { tagName: '商品退回成功', icon: 'smile', tagColor: 'green' },
 };
-
 export default {
+  name: 'CartOrder',
   components: {
     WCard,
   },
@@ -169,13 +157,13 @@ export default {
           scopedSlots: { customRender: 'actualPayment' },
         },
         {
-          title: '买家id',
+          title: '卖家id',
           dataIndex: 'buyerId',
           key: 'buyerId',
           slots: { title: 'customTitle' },
         },
         {
-          title: '买家名称',
+          title: '卖家名称',
           dataIndex: 'buyerName',
           key: 'buyerName',
           slots: { title: 'customTitle' },
@@ -226,7 +214,7 @@ export default {
         };
       },
     },
-    sallerId() {
+    buyerId() {
       return this.$store.state.loginData.userId;
     },
   },
@@ -246,6 +234,10 @@ export default {
     handleStatusChange(value) {
       this.currentReturnStatus = value;
     },
+    closeCourierNumber() {
+      this.courierNumber = '';
+      this.courierNumberOrderNumber = '';
+    },
     changeOrderListItem(orderNumber, key, value) {
       const orderList = Array.from(this.orderList);
       orderList.some((item, i) => {
@@ -257,9 +249,9 @@ export default {
       });
     },
     sendCourierNumber(record) {
-      sallerApi
+      buyerApi
         .setCourierNumber({
-          sallerId: this.sallerId,
+          buyerId: this.buyerId,
           courierNumber: this.courierNumber,
           orderNumber: record.orderNumber,
         })
@@ -275,27 +267,8 @@ export default {
         });
       this.closeCourierNumber();
     },
-    closeCourierNumber() {
-      this.courierNumber = '';
-      this.courierNumberOrderNumber = '';
-    },
-    approvalAgree(agree, record) {
-      sallerApi.handleReturnApply({
-        sallerId: this.sallerId,
-        isAgree: agree,
-        orderNumber: record.orderNumber,
-      }).then((response) => {
-        if (agree) {
-          this.changeOrderListItem(record.orderNumber, 'orderStatus', 5);
-          this.$message.success(response.data.msg);
-          return;
-        }
-        this.changeOrderListItem(record.orderNumber, 'orderStatus', 4);
-        this.$message.error(response.data.msg);
-      });
-    },
     requestOrderList() {
-      sallerApi.getOrder({ sallerId: this.sallerId }).then((response) => {
+      buyerApi.getOrder({ buyerId: this.buyerId }).then((response) => {
         if (response.data.code === -1) {
           return;
         }
@@ -315,7 +288,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.merchant-order {
+.cart-order {
   width: 100%;
   height: 100%;
   .table-wrapper {

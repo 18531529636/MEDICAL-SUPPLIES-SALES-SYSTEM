@@ -2,66 +2,65 @@
   <div class="cart-wrapper">
     <div class="cart">
       <div class="cart-cart">
-        <div class="cart-cart">
-          <div class="cart-cart-title">
-            <h3>购物车</h3>
-          </div>
-          <div class="cart-cart-table">
-            <a-table
-              :rowKey="(record) => record.commodityId"
-              :columns="columns"
-              :data-source="dataSource"
-              :row-selection="rowSelection"
-              :pagination="false"
-              :scroll="{ y: 350 }"
-            >
-              <span slot="marketvalue" slot-scope="text">
-                {{ text }}
-              </span>
-              <span slot="handler" slot-scope="text, record, index">
-                <a href="javascript:;" @click="deleteOperation(record, index)"
-                  >删除</a
-                >
-              </span>
-            </a-table>
-          </div>
-          <div class="cart-cart-pay">
-            <div class="alltotalprice">
-              <span class="alltotalprice-label">总价为：</span>
-              <span class="alltotalprice-price">{{ allTotalPrice }}</span>
-            </div>
-            <div class="cart-cart-pay-type">
-              <a-radio-group
-                v-model="payType"
-                default-value="alipay"
-                button-style="solid"
+        <div class="cart-cart-title">
+          <h3>购物车</h3>
+        </div>
+        <div class="cart-cart-table">
+          <a-table
+            :rowKey="(record) => record.commodityId"
+            :columns="columns"
+            :data-source="dataSource"
+            :row-selection="rowSelection"
+            :pagination="false"
+            :scroll="{ y: 350 }"
+          >
+            <span slot="marketvalue" slot-scope="text">
+              {{ text }}
+            </span>
+            <span slot="handler" slot-scope="text, record, index">
+              <a href="javascript:;" @click="deleteOperation(record, index)"
+                >删除</a
               >
-                <a-radio-button value="alipay"> 支付宝 </a-radio-button>
-                <a-radio-button value="tencentpay"> 微信 </a-radio-button>
-              </a-radio-group>
-            </div>
-            <a-button type="primary" @click.stop="qrShow = true">支付</a-button>
-            <div class="QRcode" v-show="qrShow">
-              <span class="QRcode-price">总价：{{ allTotalPrice }}</span>
-              <span class="close" @click.stop="qrShow = false">关闭</span>
-              <div class="qr">
-                <img :src="paySrc.src" :alt="paySrc.alt" />
-              </div>
+            </span>
+          </a-table>
+        </div>
+        <div class="cart-cart-pay">
+          <div class="alltotalprice">
+            <span class="alltotalprice-label">总价为：</span>
+            <span class="alltotalprice-price">{{ allTotalPrice }}</span>
+          </div>
+          <div class="cart-cart-pay-type">
+            <a-radio-group
+              v-model="payType"
+              default-value="alipay"
+              button-style="solid"
+            >
+              <a-radio-button value="alipay"> 支付宝 </a-radio-button>
+              <a-radio-button value="tencentpay"> 微信 </a-radio-button>
+            </a-radio-group>
+          </div>
+          <a-button type="primary" @click.stop="qrShow = true">支付</a-button>
+          <div class="QRcode" v-show="qrShow">
+            <span class="QRcode-price">总价：{{ allTotalPrice }}</span>
+            <span class="close" @click.stop="qrShow = false">关闭</span>
+            <div class="qr">
+              <img :src="paySrc.src" :alt="paySrc.alt" />
             </div>
           </div>
         </div>
       </div>
-      <div class="cart-commodity-status">
 
-      </div>
+      <div class="cart-commodity-status"></div>
     </div>
+    <cart-order />
   </div>
 </template>
 
 <script>
+import CartOrder from './cartOrderBox.vue';
 
 const tencentPay = {
-  src: '@/components/CommodityCard/首页-医疗器械1.jpg',
+  src: './statistic/tencentpay.jpg',
   alt: '微信支付',
 };
 const aliPay = {
@@ -70,6 +69,10 @@ const aliPay = {
 };
 
 export default {
+  name: 'Cart',
+  components: {
+    CartOrder,
+  },
   data() {
     return {
       qrShow: false,
@@ -128,7 +131,7 @@ export default {
         this.$store.state.commodityList.forEach((item) => {
           const obj = {
             ...item,
-            totalPrice: item.count * item.memberValue,
+            totalPrice: item.commodityCount * item.memberValue,
           };
           data.push(obj);
         });
@@ -150,7 +153,7 @@ export default {
     allTotalPrice() {
       let price = 0;
       this.selectedRows.forEach((item) => {
-        price += item.totalPrice;
+        price += item.commodityTotalValue;
       });
       return price;
     },
@@ -164,10 +167,23 @@ export default {
   },
   methods: {
     deleteOperation(record) {
-      this.$store.commit('DELETE_COMMODITY', { commodity: record });
+      this.$store.dispatch('DELETE_CARTITEM', { commodity: record, deleteCount: -1 });
     },
   },
   created() {
+  },
+  mounted() {
+    const tableContent = document.getElementsByClassName('ant-table-body')[0];
+    console.log(tableContent);
+    if (!this.dataSource.length) {
+      if (tableContent.className !== 'ant-table-body no-data') {
+        tableContent.classList.add('no-data');
+      }
+      return;
+    }
+    if (tableContent.className === 'ant-table-body no-data') {
+      tableContent.classList.remove('no-data');
+    }
   },
 };
 </script>
@@ -178,11 +194,12 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgb(172, 91, 134, 0.3);
+  overflow: auto;
 
   .cart {
     margin: 0 auto;
     width: 80%;
-    height: 100%;
+    // height: 100%;
 
     &-cart {
       position: relative;
@@ -204,7 +221,7 @@ export default {
         }
       }
 
-      &-table{
+      &-table {
         height: 400px;
       }
 
@@ -295,5 +312,19 @@ export default {
       }
     }
   }
+}
+::v-deep .ant-table-body.no-data {
+  height: 0;
+}
+
+::v-deep .ant-table-body {
+  height: 500px;
+}
+
+::v-deep .ant-table-placeholder {
+  height: 338px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
