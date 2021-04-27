@@ -3,14 +3,21 @@
     <cart-box />
     <div class="bg-circle"></div>
     <div class="sider">
-      <nav-info :currentPage="currentPage" @pageChange="pageChange" :pages="pages"></nav-info>
+      <nav-info
+        :currentPage="currentPage"
+        @pageChange="pageChange"
+        :pages="pages"
+      ></nav-info>
     </div>
     <div class="content">
       <div class="nav-header">
         <span @click="toHomme" class="nav-title">XXX医疗用品</span>
       </div>
-      <component :is="currentPage" ></component>
-      <!-- <router-view /> -->
+      <div class="content-content">
+        <div class="content-content-wrapper">
+          <component :is="currentPage"></component>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -114,7 +121,20 @@ $inputBoxBorder: rgb(59, 250, 250);
         font-size: 16px;
         font-weight: bolder;
       }
+    }
+    .content-content {
+      position: relative;
+      width: 100%;
+      height: calc(100% - 50px);
+      padding: 20px;
+      background-color: rgb(241, 241, 241);
 
+      &-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        border-radius: 6px;
+      }
     }
   }
 }

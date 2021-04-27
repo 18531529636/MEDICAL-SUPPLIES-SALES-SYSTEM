@@ -1,11 +1,6 @@
 <template>
   <div class="cart-order">
-    <w-card
-      cardWidth="400"
-      cardHeight="800"
-      :cateGoryList="cardOperations"
-      :infoList="cardOperationList"
-    >
+    <w-card :cateGoryList="cardOperations" :infoList="cardOperationList">
       <template v-slot:cardContent="cardContent">
         <div class="table-wrapper">
           <div
@@ -29,6 +24,8 @@
           <a-table
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
+            :pagination="false"
+            :scroll="{ y: 550 }"
           >
             <span slot="orderStatus" slot-scope="orderStatus, record">
               <a-tag :color="tagColor(orderStatus)">
@@ -45,7 +42,8 @@
                 size="small"
                 icon="check"
                 @click="requestReturn(record)"
-              >申请退货</a-button>
+                >申请退货</a-button
+              >
               <a-button
                 type="primary"
                 size="small"
@@ -123,9 +121,9 @@ export default {
           scopedSlots: { customRender: 'orderNumber' },
         },
         {
-          title: '商品id',
-          dataIndex: 'commodityId',
-          key: 'commodityId',
+          title: '商品编号',
+          dataIndex: 'commodityNumber',
+          key: 'commodityNumber',
           slots: { title: 'customTitle' },
         },
         {
@@ -215,7 +213,7 @@ export default {
       },
     },
     buyerId() {
-      return this.$store.state.loginData.userId;
+      return this.$store.state.buyerLogin.userId;
     },
   },
   methods: {
@@ -290,7 +288,6 @@ export default {
 <style lang="scss" scoped>
 .cart-order {
   width: 100%;
-  height: 100%;
   .table-wrapper {
     width: 100%;
     text-align: left;

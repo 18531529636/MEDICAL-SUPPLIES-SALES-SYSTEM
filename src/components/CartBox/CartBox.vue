@@ -95,7 +95,7 @@ export default {
       },
     },
     logined() {
-      return this.$checkLoginStatus();
+      return this.$checkBuyerLoginStatus();
     },
   },
   watch: {

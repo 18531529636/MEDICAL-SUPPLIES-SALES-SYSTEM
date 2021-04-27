@@ -10,8 +10,15 @@ Vue.config.productionTip = false;
 
 Vue.use(MyDirective);
 
-Vue.prototype.$checkLoginStatus = function () {
-  if (Object.keys(this.$store.state.loginData).length) {
+Vue.prototype.$checkBuyerLoginStatus = function () {
+  if (Object.keys(this.$store.state.buyerLogin).length) {
+    return true;
+  }
+  return false;
+};
+
+Vue.prototype.$checkSallerLoginStatus = function () {
+  if (Object.keys(this.$store.state.sallerLogin).length) {
     return true;
   }
   return false;

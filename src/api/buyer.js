@@ -36,6 +36,11 @@ export default {
     url: '/buyer/getOrder',
     data,
   }),
+  setOrder: (data) => service({
+    method: 'post',
+    url: '/buyer/setOrder',
+    data,
+  }),
   getVerificationCode: (params) => service({
     method: 'get',
     url: '/getVerificationCode',

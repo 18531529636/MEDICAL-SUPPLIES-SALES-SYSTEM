@@ -11,7 +11,8 @@ export default new Vuex.Store({
   state: {
     // 购物车列表
     commodityList: [],
-    loginData: {},
+    buyerLogin: {},
+    sallerLogin: {},
   },
   mutations: {
     CHANGE_CARTlIST(state, payload) {
@@ -43,25 +44,36 @@ export default new Vuex.Store({
       state.commodityList[index].commodityCount = count;
     },
     SET_LOGINCOOKIE(state) {
-      const tokenCookie = document.cookie.replace(
+      const buyerTokenCookie = document.cookie.replace(
         // eslint-disable-next-line no-useless-escape
-        /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
+        /(?:(?:^|.*;\s*)buyerToken\s*\=\s*([^;]*).*$)|^.*$/,
         '$1',
       );
-      if (!tokenCookie) {
-        state.loginData = {};
-        return;
+      const sallerTokenCookie = document.cookie.replace(
+        // eslint-disable-next-line no-useless-escape
+        /(?:(?:^|.*;\s*)sallerToken\s*\=\s*([^;]*).*$)|^.*$/,
+        '$1',
+      );
+      if (!buyerTokenCookie) {
+        state.buyerLogin = {};
+      } else {
+        const buyerLogin = AES.decrypte(unescape(buyerTokenCookie));
+        state.buyerLogin = buyerLogin;
       }
-      const loginData = AES.decrypte(unescape(tokenCookie));
-      state.loginData = loginData;
+      if (!sallerTokenCookie) {
+        state.sallerLogin = {};
+      } else {
+        const sallerLogin = AES.decrypte(unescape(sallerTokenCookie));
+        state.sallerLogin = sallerLogin;
+      }
     },
   },
   actions: {
     REQUEST_CART(context) {
-      if (!Object.keys(context.state.loginData).length) {
+      if (!Object.keys(context.state.buyerLogin).length) {
         return;
       }
-      buyerApi.getCart({ buyerId: context.state.loginData.userId }).then((response) => {
+      buyerApi.getCart({ buyerId: context.state.buyerLogin.userId }).then((response) => {
         const respData = response.data.content.map((item) => ({
           ...item,
           key: item.commodityNumber,
@@ -70,13 +82,13 @@ export default new Vuex.Store({
       });
     },
     ADD_CARTITEM(context, payload) {
-      if (!Object.keys(context.state.loginData).length) {
+      if (!Object.keys(context.state.buyerLogin).length) {
         message.error('请先登录');
         return;
       }
       buyerApi
         .addCart({
-          buyerId: context.state.loginData.userId,
+          buyerId: context.state.buyerLogin.userId,
           sallerId: payload.sallerId,
           commodityNumber: payload.commodityNumber,
         })

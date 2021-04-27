@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     logined() {
-      return !!Object.keys(this.$store.state.loginData).length;
+      return !!Object.keys(this.$store.state.buyerLogin).length;
     },
   },
 };

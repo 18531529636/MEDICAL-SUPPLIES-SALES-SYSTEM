@@ -29,7 +29,10 @@
             <span class="alltotalprice-label">总价为：</span>
             <span class="alltotalprice-price">{{ allTotalPrice }}</span>
           </div>
-          <div class="cart-cart-pay-type">
+          <a-button type="primary" @click.stop="sendTemporaryOrder"
+            >提交订单</a-button
+          >
+          <!-- <div class="cart-cart-pay-type">
             <a-radio-group
               v-model="payType"
               default-value="alipay"
@@ -46,27 +49,29 @@
             <div class="qr">
               <img :src="paySrc.src" :alt="paySrc.alt" />
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
-
       <div class="cart-commodity-status"></div>
     </div>
-    <cart-order />
+    <div class="cart-order-wrapper">
+      <cart-order />
+    </div>
   </div>
 </template>
 
 <script>
+import buyerApi from '@/api/buyer';
 import CartOrder from './cartOrderBox.vue';
 
-const tencentPay = {
-  src: './statistic/tencentpay.jpg',
-  alt: '微信支付',
-};
-const aliPay = {
-  src: './statistic/tencentpay.jpg',
-  alt: '支付宝支付',
-};
+// const tencentPay = {
+//   src: './statistic/tencentpay.jpg',
+//   alt: '微信支付',
+// };
+// const aliPay = {
+//   src: './statistic/tencentpay.jpg',
+//   alt: '支付宝支付',
+// };
 
 export default {
   name: 'Cart',
@@ -75,7 +80,7 @@ export default {
   },
   data() {
     return {
-      qrShow: false,
+      // qrShow: false,
       selectedRows: [],
       payType: 'alipay',
       columns: [
@@ -125,6 +130,9 @@ export default {
     },
   },
   computed: {
+    buyerId() {
+      return this.$store.state.buyerLogin.userId;
+    },
     dataSource: {
       get() {
         const data = [];
@@ -141,15 +149,15 @@ export default {
         console.log(val);
       },
     },
-    paySrc() {
-      if (this.payType === 'alipay') {
-        return aliPay;
-      }
-      if (this.payType === 'tencentpay') {
-        return tencentPay;
-      }
-      return false;
-    },
+    // paySrc() {
+    //   if (this.payType === 'alipay') {
+    //     return aliPay;
+    //   }
+    //   if (this.payType === 'tencentpay') {
+    //     return tencentPay;
+    //   }
+    //   return false;
+    // },
     allTotalPrice() {
       let price = 0;
       this.selectedRows.forEach((item) => {
@@ -166,6 +174,23 @@ export default {
     },
   },
   methods: {
+    sendTemporaryOrder() {
+      // 创建临时订单
+      if (!this.selectedRows.length) {
+        this.$message.warning('请选择想要结账的商品');
+        return;
+      }
+      const selectRows = Array.from(this.selectedRows);
+      const cartNumberList = selectRows.map((item) => item.cartNumber);
+      const receivingAddress = {
+        province: '北京',
+        city: '北京市',
+        area: '大兴区',
+        town: '西红门镇',
+        detailAddress: '蜂窝公寓',
+      };
+      buyerApi.setOrder({ cartNumberList, receivingAddress, buyerId: this.buyerId });
+    },
     deleteOperation(record) {
       this.$store.dispatch('DELETE_CARTITEM', { commodity: record, deleteCount: -1 });
     },
@@ -174,7 +199,6 @@ export default {
   },
   mounted() {
     const tableContent = document.getElementsByClassName('ant-table-body')[0];
-    console.log(tableContent);
     if (!this.dataSource.length) {
       if (tableContent.className !== 'ant-table-body no-data') {
         tableContent.classList.add('no-data');
@@ -192,20 +216,20 @@ export default {
 .cart-wrapper {
   position: relative;
   width: 100%;
-  height: 100%;
-  background-color: rgb(172, 91, 134, 0.3);
-  overflow: auto;
+
+  .cart-order-wrapper {
+    position: relative;
+    width: 100%;
+  }
 
   .cart {
     margin: 0 auto;
     width: 80%;
-    // height: 100%;
 
     &-cart {
       position: relative;
       width: 100%;
       height: 500px;
-      background-color: brown;
 
       &-title {
         display: block;
@@ -216,7 +240,7 @@ export default {
         border-bottom: 2px solid #999;
 
         h3 {
-          color: #fff;
+          color: #111;
           font-size: 18px;
         }
       }
@@ -226,9 +250,8 @@ export default {
       }
 
       &-pay {
-        background-color: rgb(119, 119, 218);
         position: relative;
-
+        background-color: #ddd;
         margin-top: 10px;
         text-align: left;
         height: 30px;
@@ -279,7 +302,6 @@ export default {
           bottom: 0;
           width: 400px;
           height: 400px;
-          background-color: rgba(100, 100, 148, 0.8);
 
           &-price {
             position: relative;

@@ -51,7 +51,7 @@ export default {
     },
   },
   created() {
-    this.logined = this.$checkLoginStatus();
+    this.logined = this.$checkBuyerLoginStatus();
   },
   methods: {
     changHomeContent() {
@@ -64,7 +64,7 @@ export default {
       this.$router.push('apparatus');
     },
     logout() {
-      const { loginNumber } = this.$store.state.loginData;
+      const { loginNumber } = this.$store.state.buyerLogin;
       buyerApi.logout({ loginNumber }).then((response) => {
         console.log(response);
         if (response.data.code === 0) {

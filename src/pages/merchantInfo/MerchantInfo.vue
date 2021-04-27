@@ -43,18 +43,6 @@
         </span>
         <a-input v-else></a-input>
       </a-descriptions-item>
-      <!-- <a-descriptions-item label="Config Info" :span="5">
-        Data disk type: MongoDB
-        <br />
-        Database version: 3.4
-        <br />
-        Package: dds.mongo.mid
-        <br />
-        Storage space: 10 GB
-        <br />
-        Replication factor: 3
-        <br />1011 01 Region: East China 1<br />
-      </a-descriptions-item> -->
     </a-descriptions>
     <a-button style="margin: 20px 20px 0 0" @click="editInfo = !editInfo"
       >修改信息</a-button

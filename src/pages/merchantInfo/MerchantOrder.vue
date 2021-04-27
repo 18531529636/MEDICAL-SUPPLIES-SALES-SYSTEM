@@ -227,7 +227,7 @@ export default {
       },
     },
     sallerId() {
-      return this.$store.state.loginData.userId;
+      return this.$store.state.sallerLogin.userId;
     },
   },
   methods: {
@@ -317,7 +317,6 @@ export default {
 <style lang="scss" scoped>
 .merchant-order {
   width: 100%;
-  height: 100%;
   .table-wrapper {
     width: 100%;
     text-align: left;
