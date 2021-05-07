@@ -2,7 +2,7 @@
   <div class="card-wrapper">
     <div class="card" v-for="cateGory in cateGoryList" :key="cateGory.key">
       <div class="card-title" :id="cateGory.key">
-        <span class="card-title-title">{{ cateGory.title }}</span>
+        <span class="card-title-title">{{ cateGory.label }}</span>
       </div>
 
       <slot :cateGoryKey="cateGory.key" name="cardContent">
