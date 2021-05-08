@@ -13,6 +13,7 @@
             :row-selection="rowSelection"
             :pagination="false"
             :scroll="{ y: 350 }"
+            class="table-wrapper"
           >
             <span slot="marketvalue" slot-scope="text">
               {{ text }}
@@ -61,7 +62,7 @@
 </template>
 
 <script>
-import buyerApi from '@/api/buyer';
+// import buyerApi from '@/api/buyer';
 import CartOrder from './cartOrderBox.vue';
 
 // const tencentPay = {
@@ -136,6 +137,7 @@ export default {
     dataSource: {
       get() {
         const data = [];
+        if (!this.$store.state.commodityList.length) return [];
         this.$store.state.commodityList.forEach((item) => {
           const obj = {
             ...item,
@@ -182,14 +184,27 @@ export default {
       }
       const selectRows = Array.from(this.selectedRows);
       const cartNumberList = selectRows.map((item) => item.cartNumber);
-      const receivingAddress = {
-        province: '北京',
-        city: '北京市',
-        area: '大兴区',
-        town: '西红门镇',
-        detailAddress: '蜂窝公寓',
-      };
-      buyerApi.setOrder({ cartNumberList, receivingAddress, buyerId: this.buyerId });
+      console.log(cartNumberList);
+      // const receivingAddress = {
+      //   province: '北京',
+      //   city: '北京市',
+      //   area: '大兴区',
+      //   town: '西红门镇',
+      //   detailAddress: '蜂窝公寓',
+      // };
+      // buyerApi.setOrder({ cartNumberList, receivingAddress, buyerId: this.buyerId })
+      //   .then((response) => {
+      //     console.log(response.data);
+      //     if (response.data.code === 0 || !response.data.orderList.length) {
+      //     }
+      //   });
+      const queryData = this.$utils.crypto.encrypte(cartNumberList);
+      console.log(queryData);
+      const routeData = this.$router.resolve({
+        name: 'PayPage',
+        query: { num: queryData },
+      });
+      window.open(routeData.href, '_blank');
     },
     deleteOperation(record) {
       this.$store.dispatch('DELETE_CARTITEM', { commodity: record, deleteCount: -1 });
@@ -199,9 +214,15 @@ export default {
   },
   mounted() {
     const tableContent = document.getElementsByClassName('ant-table-body')[0];
+    console.log('this.dataSource');
+    console.log(this.dataSource);
     if (!this.dataSource.length) {
+      console.log(tableContent);
+      console.log(tableContent.className);
       if (tableContent.className !== 'ant-table-body no-data') {
-        tableContent.classList.add('no-data');
+        // tableContent.classList.add('no-data');
+        tableContent.style.height = '0px';
+        // console.log(tableContent.className);
       }
       return;
     }
@@ -335,13 +356,13 @@ export default {
     }
   }
 }
-::v-deep .ant-table-body.no-data {
-  height: 0;
-}
+// ::v-deep .table-wrapper .ant-table-body.no-data {
+//   height: 0 !important;
+// }
 
-::v-deep .ant-table-body {
-  height: 500px;
-}
+// ::v-deep .ant-table-body {
+//   height: 500px;
+// }
 
 ::v-deep .ant-table-placeholder {
   height: 338px;

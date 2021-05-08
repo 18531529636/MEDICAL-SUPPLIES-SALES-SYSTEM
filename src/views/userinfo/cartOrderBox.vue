@@ -135,37 +135,24 @@ export default {
         },
         {
           title: '商品实际单价',
-          dataIndex: 'actualValue',
-          key: 'actualValue',
+          dataIndex: 'memberValue',
+          key: 'memberValue',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'actualValue' },
+          scopedSlots: { customRender: 'memberValue' },
         },
         {
           title: '商品数量',
-          dataIndex: 'commodityCount',
-          key: 'commodityCount',
+          dataIndex: 'commodityCurrentCount',
+          key: 'commodityCurrentCount',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'commodityCount' },
+          scopedSlots: { customRender: 'commodityCurrentCount' },
         },
         {
           title: '实际付款(元)',
-          dataIndex: 'actualPayment',
-          key: 'actualPayment',
+          dataIndex: 'totalValue',
+          key: 'totalValue',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'actualPayment' },
-        },
-        {
-          title: '卖家id',
-          dataIndex: 'buyerId',
-          key: 'buyerId',
-          slots: { title: 'customTitle' },
-        },
-        {
-          title: '卖家名称',
-          dataIndex: 'buyerName',
-          key: 'buyerName',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'buyerName' },
+          scopedSlots: { customRender: 'totalValue' },
         },
         {
           align: 'left',
@@ -273,8 +260,10 @@ export default {
         const arr = response.data.content;
         const data = arr.map((item) => ({
           ...item,
+          children: item.commodityList,
           key: item.orderNumber,
         }));
+        console.log(data);
         this.orderList = data;
       });
     },

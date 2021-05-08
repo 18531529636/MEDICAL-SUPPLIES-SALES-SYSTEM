@@ -50,6 +50,12 @@ const routes = [
     // ],
   },
   {
+    // 商家信息
+    name: 'PayPage',
+    path: '/paypage',
+    component: () => import(/* webpackChunkName: "merchantinfo" */ '../views/setupOrder/pay.vue'),
+  },
+  {
     path: '/merchant',
     name: 'MerChant',
     redirect: '/merchant/login',

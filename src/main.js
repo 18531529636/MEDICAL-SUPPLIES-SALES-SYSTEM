@@ -3,6 +3,7 @@ import MyDirective from '@/directive';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import utils from './utils';
 import '@/plugins/ant';
 import '@/plugins/ant-design-style';
 
@@ -27,6 +28,8 @@ Vue.prototype.$checkSallerLoginStatus = function () {
 Vue.prototype.$initLoginData = function () {
   this.$store.commit('SET_LOGINCOOKIE');
 };
+
+Vue.prototype.$utils = utils;
 
 new Vue({
   router,

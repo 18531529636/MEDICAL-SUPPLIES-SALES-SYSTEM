@@ -13,6 +13,8 @@ import {
   Message,
   Descriptions,
   Select,
+  Card,
+  Popconfirm,
 } from 'ant-design-vue';
 
 Vue.use(Button);
@@ -28,5 +30,7 @@ Vue.use(Input);
 Vue.use(Message);
 Vue.use(Descriptions);
 Vue.use(Select);
+Vue.use(Card);
+Vue.use(Popconfirm);
 
 Vue.prototype.$message = Message;

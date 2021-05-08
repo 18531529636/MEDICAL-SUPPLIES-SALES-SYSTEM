@@ -7,11 +7,11 @@
         :currentPage="currentPage"
         @pageChange="pageChange"
         :pages="pages"
-      ></nav-info>
+      />
     </div>
     <div class="content">
       <div class="nav-header">
-        <span @click="toHomme" class="nav-title">XXX医疗用品</span>
+        <span @click="toHome" class="nav-title">XXX医疗用品</span>
       </div>
       <div class="content-content">
         <div class="content-content-wrapper">
@@ -41,13 +41,13 @@ export default {
     Info,
   },
   data() {
+    this.pages = pages;
     return {
-      pages,
       currentPage: 'Cart',
     };
   },
   methods: {
-    toHomme() {
+    toHome() {
       this.$router.push({ name: 'Home' });
     },
     pageChange(parmas) {

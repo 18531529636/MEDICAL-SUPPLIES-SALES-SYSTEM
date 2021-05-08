@@ -1,6 +1,11 @@
 import service from './index';
 
 export default {
+  getUserInfo: (data) => service({
+    url: '/buyer/getUserInfo',
+    method: 'post',
+    data,
+  }),
   login: (data) => service({
     method: 'post',
     url: '/buyer/login',
@@ -18,6 +23,11 @@ export default {
   }),
   getCart: (data) => service({
     url: '/buyer/getCart',
+    method: 'post',
+    data,
+  }),
+  getCartDetail: (data) => service({
+    url: '/buyer/getCartDetail',
     method: 'post',
     data,
   }),
@@ -39,6 +49,26 @@ export default {
   setOrder: (data) => service({
     method: 'post',
     url: '/buyer/setOrder',
+    data,
+  }),
+  setAddress: (data) => service({
+    method: 'post',
+    url: '/buyer/setAddress',
+    data,
+  }),
+  getAddress: (data) => service({
+    method: 'post',
+    url: '/buyer/getAddress',
+    data,
+  }),
+  setDefaultAddress: (data) => service({
+    method: 'post',
+    url: '/buyer/setDefaultAddress',
+    data,
+  }),
+  deleteAddress: (data) => service({
+    method: 'post',
+    url: '/buyer/deleteAddress',
     data,
   }),
   getVerificationCode: (params) => service({
