@@ -10,9 +10,17 @@
       </div>
       <div class="content-content">
         <div class="content-content-wrapper">
-          <div class="chooose-address">
+          <div class="choose-address" v-if="!buyerAddressList.length">
             <h2 class="title">选择地址</h2>
-            <div class="chooose-address-content">
+            <div class="choose-address-content">
+              <span>暂无数据</span>
+            </div>
+            <h2 class="title">已选地址</h2>
+            <div class="show-chooseaddress">暂无数据</div>
+          </div>
+          <div class="choose-address" v-else>
+            <h2 class="title">选择地址</h2>
+            <div class="choose-address-content">
               <a-radio-group
                 v-model="addressKey"
                 @change="changeDefaultAddress"
@@ -66,6 +74,42 @@
           </div>
           <div class="confirm-orderinfo">
             <h2 class="title">确认订单信息</h2>
+            <div class="confirm-orderinfo-content">
+              <commodity-confirm
+                v-for="commodity in commodityList"
+                :commodityInfo="commodity"
+                :key="commodity.cartNumber"
+              />
+            </div>
+            <div class="confirm-info-wrapper">
+              <div class="confirm-content">
+                <div class="total-pay">
+                  <h2 class="total-pay-title">实际付款：</h2>
+                  <span class="total-pay-symbol">￥</span>
+                  <span class="total-pay-value"> {{ totalValue }}</span>
+                </div>
+                <div class="receive-content">
+                  <p class="receive-content-address">
+                    <span class="receive-title">寄送至：</span>
+                    <span class="receive-content">
+                      {{ chooseedAddress.province }}
+                      {{ chooseedAddress.city }}
+                      {{ chooseedAddress.country }}
+                      {{ chooseedAddress.town }}
+                      {{ chooseedAddress.detailedAddress }}
+                    </span>
+                  </p>
+                  <p class="receive-content-person">
+                    <span class="receive-title">收货人：</span>
+                    <span class="receive-content"
+                      >{{ chooseedAddress.receivePeople }}
+                      {{ chooseedAddress.receivePhone }}
+                    </span>
+                  </p>
+                </div>
+                <button class="send-confirm" @click="sendConfirmInfo">提交订单</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -75,6 +119,7 @@
 
 <script>
 import NavInfo from '@/components/NavMyInfo';
+import CommodityConfirm from '@/components/commodityConfirmBox';
 import buyerApi from '@/api/buyer';
 
 const pages = [
@@ -84,6 +129,7 @@ const pages = [
 export default {
   components: {
     NavInfo,
+    CommodityConfirm,
   },
   data() {
     this.pages = pages;
@@ -93,9 +139,19 @@ export default {
       buyerAddressList: [],
       currentPage: 'pay',
       chooseedAddress: {},
+      commodityList: [],
     };
   },
   computed: {
+    totalValue() {
+      if (!this.commodityList.length) {
+        return 0;
+      }
+      return this.$utils.toArray(this.commodityList)
+        .reduce((sum, item, index) => (index === 1 ? sum.commodityTotalValue
+          + item.commodityTotalValue : sum
+        + item.commodityTotalValue)).toFixed(2);
+    },
     cartList() {
       return this.$route.query.num;
     },
@@ -118,6 +174,18 @@ export default {
     });
   },
   methods: {
+    sendConfirmInfo() {
+      const cartNumberList = this.$utils.toArray(this.commodityList).map((item) => item.cartNumber);
+      const requestObj = {
+        receivingAddress: this.chooseedAddress,
+        buyerId: this.$store.state.buyerLogin.userId,
+        commodityList: cartNumberList,
+      };
+      console.log(requestObj);
+      buyerApi.setOrder(requestObj).then((response) => {
+        console.log(response.data);
+      });
+    },
     toHome() {
       this.$router.push({ name: 'Home' });
     },
@@ -129,7 +197,7 @@ export default {
 
       buyerApi.getCartDetail({ buyerId: this.buyerId, cartNumberList: queryData })
         .then((response) => {
-          console.log(response.data);
+          this.commodityList = response.data.content;
         });
     },
     getAddress() {
@@ -258,7 +326,7 @@ export default {
         border-radius: 6px;
         background-color: #fff;
 
-        .chooose-address {
+        .choose-address {
           width: 100%;
           padding: 20px 80px;
 
@@ -276,7 +344,72 @@ export default {
         }
         .confirm-orderinfo {
           width: 100%;
+          margin-bottom: 200px;
           padding: 20px 80px;
+
+          .confirm-info-wrapper {
+            width: 100%;
+            text-align: right;
+
+            .confirm-content {
+              border: 3px solid rgb(250, 152, 117);
+              padding: 10px 20px;
+              display: inline-block;
+              min-width: 400px;
+              position: relative;
+
+              .total-pay {
+                &-title {
+                  font-weight: 800;
+                  font-size: 20px;
+                  display: inline-block;
+                }
+
+                &-symbol {
+                  font-size: 30px;
+                  color: #aaa;
+                }
+                &-value {
+                  font-size: 30px;
+                  font-weight: 600;
+                  color: #f40;
+                }
+              }
+              .receive-content {
+                &-address {
+                  .receive-title {
+                    font-weight: 800;
+                    color: #333;
+                  }
+                  .receive-content {
+                  }
+                }
+                &-person {
+                  .receive-title {
+                    font-weight: 800;
+                    color: #333;
+                  }
+                  .receive-content {
+                  }
+                }
+              }
+
+              .send-confirm {
+                cursor: pointer;
+                width: 100px;
+                height: 50px;
+                position: absolute;
+                background-color: #f40;
+                color: #fff;
+                border: none;
+                bottom: -50px;
+                right: 0;
+              }
+              .send-confirm:active {
+                background-color: rgb(202, 72, 25);
+              }
+            }
+          }
         }
       }
     }

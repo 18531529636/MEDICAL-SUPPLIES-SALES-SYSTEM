@@ -192,9 +192,9 @@ export default {
         },
       ],
       cardOperations: [
-        { title: '未发货订单', key: 'unshippedOrder' },
-        { title: '退货订单', key: 'returnOrder' },
-        { title: '已发货订单', key: 'shippedOrder' },
+        { label: '未发货订单', key: 'unshippedOrder' },
+        { label: '退货订单', key: 'returnOrder' },
+        { label: '已发货订单', key: 'shippedOrder' },
       ],
       orderList: [],
       returnStatus: [

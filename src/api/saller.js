@@ -21,6 +21,26 @@ export default {
     url: '/saller/getOrder',
     data,
   }),
+  createMyCommodity: (data) => service({
+    method: 'post',
+    url: '/saller/createMyCommodity',
+    data,
+  }),
+  getMyCommodity: (data) => service({
+    method: 'post',
+    url: '/saller/getMyCommodity',
+    data,
+  }),
+  updateCommodity: (data) => service({
+    method: 'post',
+    url: '/saller/updateCommodity',
+    data,
+  }),
+  deleteCommodity: (data) => service({
+    method: 'post',
+    url: '/saller/deleteCommodity',
+    data,
+  }),
   setCourierNumber: (data) => service({
     method: 'post',
     url: '/saller/setCourierNumber',

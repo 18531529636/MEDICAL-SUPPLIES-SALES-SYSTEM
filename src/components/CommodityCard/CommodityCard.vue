@@ -13,7 +13,7 @@
             height: `${cardHeight}px`,
           }"
           v-for="info in infoList[cateGory.key]"
-          :key="info.commodityNumber"
+          :key="info.commodityNumber + Math.floor(Math.random() * 9)"
           @click.stop="cardClick(info)"
         >
           <div
