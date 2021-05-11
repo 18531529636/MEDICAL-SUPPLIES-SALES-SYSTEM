@@ -6,4 +6,9 @@ export default {
     url: '/getInvitationCode',
     params,
   }),
+  search: (data) => service({
+    url: '/buyer/search',
+    method: 'post',
+    data,
+  }),
 };

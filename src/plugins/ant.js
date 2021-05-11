@@ -19,6 +19,7 @@ import {
   Col,
   Row,
   Form,
+  Statistic,
 } from 'ant-design-vue';
 
 Vue.use(Button);
@@ -40,5 +41,6 @@ Vue.use(Drawer);
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(Form);
+Vue.use(Statistic);
 
 Vue.prototype.$message = Message;

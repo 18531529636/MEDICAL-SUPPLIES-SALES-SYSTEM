@@ -8,7 +8,7 @@
       <a-layout>
         <a-layout>
           <a-layout-header>
-            <nav-header />
+            <nav-header @searchHandle="searchHandle" />
           </a-layout-header>
           <a-layout-content>
             <layout-content :cateGoryList="cateGoryList" :infoList="infoList" />
@@ -54,6 +54,24 @@ export default {
       } else if (page === 'info') {
         this.$router.push({ name: 'Info', query: { commodityId: 1 } });
       }
+    },
+    searchHandle(searchData) {
+      if (!searchData) {
+        this.getCommodity();
+        return;
+      }
+      this.$publicApi.search({ keyword: searchData })
+        .then((response) => {
+          const respData = response.data.content;
+          this.infoList = respData;
+          const classificationNumber = [];
+          Object.keys(respData).froEach((key) => {
+            if (respData[key]) {
+              classificationNumber.push(key);
+            }
+          });
+          buyerApi.getClassification(classificationNumber);
+        });
     },
     getCommodity() {
       buyerApi.getCommodity({ classificationNumber: -1 })

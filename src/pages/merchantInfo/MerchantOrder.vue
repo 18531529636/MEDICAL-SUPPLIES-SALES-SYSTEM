@@ -30,16 +30,16 @@
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
           >
-            <span slot="orderStatus" slot-scope="orderStatus, record, index">
-              <a-tag :color="tagColor(orderStatus)">
-                {{ tagName(orderStatus) }}
+            <span slot="commodityStatus" slot-scope="commodityStatus, record, index">
+              <a-tag :color="tagColor(commodityStatus)">
+                {{ tagName(commodityStatus) }}
                 <a-icon
-                  v-if="!['0'].includes(orderStatus)"
-                  :type="iconFront(orderStatus)"
+                  v-if="!['0'].includes(commodityStatus)"
+                  :type="iconFront(commodityStatus)"
                 ></a-icon>
               </a-tag>
               <a-button
-                v-if="orderStatus === 3"
+                v-if="commodityStatus === 3"
                 type="link"
                 shape="circle"
                 size="small"
@@ -49,7 +49,7 @@
                 "
               ></a-button>
               <a-button
-                v-if="orderStatus === 3"
+                v-if="commodityStatus === 3"
                 type="link"
                 shape="circle"
                 size="small"
@@ -62,7 +62,7 @@
                 type="primary"
                 size="small"
                 v-if="
-                  orderStatus === 0 &&
+                  commodityStatus === 0 &&
                   courierNumberOrderNumber !== record.orderNumber
                 "
                 @click="inputCourierNumber(record.orderNumber)"
@@ -71,7 +71,7 @@
               <div
                 class="input-courier-number"
                 v-if="
-                  orderStatus === 0 &&
+                  commodityStatus === 0 &&
                   courierNumberOrderNumber === record.orderNumber
                 "
               >
@@ -136,8 +136,8 @@ export default {
         },
         {
           title: '商品id',
-          dataIndex: 'commodityId',
-          key: 'commodityId',
+          dataIndex: 'commodityNumber',
+          key: 'commodityNumber',
           slots: { title: 'customTitle' },
         },
         {
@@ -149,10 +149,10 @@ export default {
         },
         {
           title: '商品实际单价',
-          dataIndex: 'actualValue',
-          key: 'actualValue',
+          dataIndex: 'memberValue',
+          key: 'memberValue',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'actualValue' },
+          scopedSlots: { customRender: 'memberValue' },
         },
         {
           title: '商品数量',
@@ -163,10 +163,10 @@ export default {
         },
         {
           title: '实际付款(元)',
-          dataIndex: 'actualPayment',
-          key: 'actualPayment',
+          dataIndex: 'commodityTotalValue',
+          key: 'commodityTotalValue',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'actualPayment' },
+          scopedSlots: { customRender: 'commodityTotalValue' },
         },
         {
           title: '买家id',
@@ -183,11 +183,27 @@ export default {
         },
         {
           align: 'left',
-          title: '订单状态',
-          dataIndex: 'orderStatus',
-          key: 'orderStatus',
+          title: '发货快递单号',
+          dataIndex: 'goCourierNumber',
+          key: 'goCourierNumber',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'orderStatus' },
+          scopedSlots: { customRender: 'goCourierNumber' },
+        },
+        {
+          align: 'left',
+          title: '退货快递单号',
+          dataIndex: 'backCourierNumber',
+          key: 'backCourierNumber',
+          slots: { title: 'customTitle' },
+          scopedSlots: { customRender: 'backCourierNumber' },
+        },
+        {
+          align: 'left',
+          title: '订单状态',
+          dataIndex: 'commodityStatus',
+          key: 'commodityStatus',
+          slots: { title: 'customTitle' },
+          scopedSlots: { customRender: 'commodityStatus' },
           width: 300,
         },
       ],
@@ -212,14 +228,14 @@ export default {
     cardOperationList: {
       get() {
         const orderListData = Array.from(this.orderList);
-        const unshippedOrder = orderListData.filter((ele) => ele.orderStatus === 0);
-        const shippedOrder = orderListData.filter((ele) => [1, 2].includes(ele.orderStatus));
+        const unshippedOrder = orderListData.filter((ele) => ele.commodityStatus === 0);
+        const shippedOrder = orderListData.filter((ele) => [1, 2].includes(ele.commodityStatus));
         const returnOrder = this.currentReturnStatus === -1
-          ? orderListData.filter((ele) => [3, 4, 5, 6, 7].includes(ele.orderStatus))
-          : orderListData.filter((ele) => this.currentReturnStatus === ele.orderStatus);
+          ? orderListData.filter((ele) => [3, 4, 5, 6, 7].includes(ele.commodityStatus))
+          : orderListData.filter((ele) => this.currentReturnStatus === ele.commodityStatus);
 
         unshippedOrder.sort((a, b) => a.orderNumber - b.orderNumber);
-        shippedOrder.sort((a, b) => b.orderStatus - a.orderStatus);
+        shippedOrder.sort((a, b) => b.commodityStatus - a.commodityStatus);
         returnOrder.sort((a, b) => b.setTime - a.setTime);
         return {
           unshippedOrder, shippedOrder, returnOrder,
@@ -266,7 +282,7 @@ export default {
         .then((response) => {
           if (response.data.code === 0) {
             this.$message.success(response.data.msg);
-            this.changeOrderListItem(record.orderNumber, 'orderStatus', 1);
+            this.requestOrderList();
             return;
           }
           this.$message.error(response.data.msg);
@@ -286,11 +302,11 @@ export default {
         orderNumber: record.orderNumber,
       }).then((response) => {
         if (agree) {
-          this.changeOrderListItem(record.orderNumber, 'orderStatus', 5);
+          this.changeOrderListItem(record.orderNumber, 'commodityStatus', 5);
           this.$message.success(response.data.msg);
           return;
         }
-        this.changeOrderListItem(record.orderNumber, 'orderStatus', 4);
+        this.changeOrderListItem(record.orderNumber, 'commodityStatus', 4);
         this.$message.error(response.data.msg);
       });
     },

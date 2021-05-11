@@ -33,24 +33,6 @@
           <a-button type="primary" @click.stop="sendTemporaryOrder"
             >提交订单</a-button
           >
-          <!-- <div class="cart-cart-pay-type">
-            <a-radio-group
-              v-model="payType"
-              default-value="alipay"
-              button-style="solid"
-            >
-              <a-radio-button value="alipay"> 支付宝 </a-radio-button>
-              <a-radio-button value="tencentpay"> 微信 </a-radio-button>
-            </a-radio-group>
-          </div>
-          <a-button type="primary" @click.stop="qrShow = true">支付</a-button>
-          <div class="QRcode" v-show="qrShow">
-            <span class="QRcode-price">总价：{{ allTotalPrice }}</span>
-            <span class="close" @click.stop="qrShow = false">关闭</span>
-            <div class="qr">
-              <img :src="paySrc.src" :alt="paySrc.alt" />
-            </div>
-          </div> -->
         </div>
       </div>
       <div class="cart-commodity-status"></div>
@@ -151,15 +133,6 @@ export default {
         console.log(val);
       },
     },
-    // paySrc() {
-    //   if (this.payType === 'alipay') {
-    //     return aliPay;
-    //   }
-    //   if (this.payType === 'tencentpay') {
-    //     return tencentPay;
-    //   }
-    //   return false;
-    // },
     allTotalPrice() {
       let price = 0;
       this.selectedRows.forEach((item) => {

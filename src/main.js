@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import MyDirective from '@/directive';
+import publicApi from '@/api/public';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -30,6 +31,7 @@ Vue.prototype.$initLoginData = function () {
 };
 
 Vue.prototype.$utils = utils;
+Vue.prototype.$publicApi = publicApi;
 
 new Vue({
   router,

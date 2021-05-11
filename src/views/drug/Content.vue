@@ -66,7 +66,6 @@ export default {
   },
   methods: {
     addToCart(card) {
-      console.log(card);
       this.$store.dispatch('ADD_CARTITEM', card);
     },
   },

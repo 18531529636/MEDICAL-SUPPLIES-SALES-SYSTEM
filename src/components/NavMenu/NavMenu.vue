@@ -61,8 +61,8 @@ export default {
   methods: {
     mouseenterEvent: debounce(function test(item) {
       this.flexContentShow = true;
-      console.log(item);
       this.hoverNavItem = item;
+      console.log(item);
     }, 300),
     mouseleaveEvent() {
       this.clearFlexContentTimer();

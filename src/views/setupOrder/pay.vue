@@ -9,7 +9,7 @@
         <span @click="toHome" class="nav-title">XXX医疗用品</span>
       </div>
       <div class="content-content">
-        <div class="content-content-wrapper">
+        <div v-if="!paying" class="content-content-wrapper">
           <div class="choose-address" v-if="!buyerAddressList.length">
             <h2 class="title">选择地址</h2>
             <div class="choose-address-content">
@@ -107,9 +107,26 @@
                     </span>
                   </p>
                 </div>
-                <button class="send-confirm" @click="sendConfirmInfo">提交订单</button>
+                <button class="send-confirm" @click="sendConfirmInfo">
+                  提交订单
+                </button>
               </div>
             </div>
+          </div>
+        </div>
+        <div v-else class="content-content-wrapper">
+          <div class="count-down">
+            <a-statistic-countdown
+              title="请在30十分钟内支付"
+              :value="deadline"
+              format="D 天 H 时 m 分 s 秒"
+            />
+          </div>
+          <div class="payimg">
+            <img :src="paySrc.src" :alt="paySrc.alt" />
+          </div>
+          <div class="check-pay">
+            <a-button @click="checkPay">支付完成</a-button>
           </div>
         </div>
       </div>
@@ -122,6 +139,14 @@ import NavInfo from '@/components/NavMyInfo';
 import CommodityConfirm from '@/components/commodityConfirmBox';
 import buyerApi from '@/api/buyer';
 
+const tencentPay = {
+  src: './statistic/tencentpay.jpg',
+  alt: '微信支付',
+};
+const aliPay = {
+  src: './statistic/tencentpay.jpg',
+  alt: '支付宝支付',
+};
 const pages = [
   { key: 'pay', label: '支付页面' },
 ];
@@ -134,6 +159,10 @@ export default {
   data() {
     this.pages = pages;
     return {
+      orderNumberList: [],
+      paying: false,
+      deadline: 0,
+      payType: 'alipay',
       addressKey: '',
       defaultAddressKey: '',
       buyerAddressList: [],
@@ -143,6 +172,15 @@ export default {
     };
   },
   computed: {
+    paySrc() {
+      if (this.payType === 'alipay') {
+        return aliPay;
+      }
+      if (this.payType === 'tencentpay') {
+        return tencentPay;
+      }
+      return false;
+    },
     totalValue() {
       if (!this.commodityList.length) {
         return 0;
@@ -174,6 +212,17 @@ export default {
     });
   },
   methods: {
+    checkPay() {
+      buyerApi.checkOrderPay({ orderNumberList: this.orderNumberList })
+        .then((response) => {
+          if (response.data.code === 0) {
+            window.opener = null;
+            window.open('about:blank', '_top').close();
+            return;
+          }
+          this.$message.error('支付失败');
+        });
+    },
     sendConfirmInfo() {
       const cartNumberList = this.$utils.toArray(this.commodityList).map((item) => item.cartNumber);
       const requestObj = {
@@ -181,9 +230,12 @@ export default {
         buyerId: this.$store.state.buyerLogin.userId,
         commodityList: cartNumberList,
       };
-      console.log(requestObj);
       buyerApi.setOrder(requestObj).then((response) => {
-        console.log(response.data);
+        this.$message.success('提交成功');
+        this.paying = true;
+        this.deadline = response.data.orderList[0].updateTime + 1000 * 60 * 30;
+        this.orderNumberList = this.$utils.toArray(response.data.orderList)
+          .map((item) => item.orderNumber);
       });
     },
     toHome() {
@@ -289,6 +341,9 @@ export default {
     width: calc(100% - 200px);
     height: 100%;
     z-index: 3;
+    .count-down {
+      padding: 20px;
+    }
 
     .nav-header {
       position: relative;
@@ -326,6 +381,23 @@ export default {
         border-radius: 6px;
         background-color: #fff;
 
+        .payimg {
+          margin: 0 auto;
+          width: 400px;
+          height: 500px;
+          img {
+            width: 400px;
+            height: 500px;
+          }
+        }
+        .check-pay {
+          position: relative;
+
+          button {
+            position: absolute;
+            right: 30%;
+          }
+        }
         .choose-address {
           width: 100%;
           padding: 20px 80px;

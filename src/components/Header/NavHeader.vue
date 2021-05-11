@@ -3,8 +3,14 @@
     <div class="nav-header">
       <span @click="toHome" class="nav-title">XXX医疗用品</span>
       <div class="input-box">
-        <input placeholder="请输入搜索信息" type="text" />
-        <button>搜索</button>
+        <!-- <input placeholder="请输入搜索信息" type="text"  />
+        <button>搜索</button> -->
+        <a-input-search
+          placeholder="input search text"
+          style="width: 200px"
+          v-model="searchData"
+          @search="searchHandle"
+        />
       </div>
       <div class="user">
         <div class="user-cart" @click="toUser('cart')">
@@ -20,15 +26,16 @@
 
 <script>
 export default {
+  data() {
+    return {
+      searchData: '',
+    };
+  },
   methods: {
-    toUser(page) {
-      console.log(page);
-      // if (page === 'cart') {
-      //   // 跳转页面同时 给页面一个值
-      //   this.$router.push({ name: 'User', query: { page: 'cart' } });
-      // } else if (page === 'info') {
-      //   this.$router.push({ name: 'User', query: { page: 'info' } });
-      // }
+    searchHandle() {
+      this.$emit('searchHandle', this.searchData);
+    },
+    toUser() {
       this.$router.push({ name: 'User' });
     },
     toHome() {

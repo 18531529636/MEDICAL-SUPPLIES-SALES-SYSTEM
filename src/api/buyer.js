@@ -61,6 +61,11 @@ export default {
     url: '/buyer/getAddress',
     data,
   }),
+  checkOrderPay: (data) => service({
+    method: 'post',
+    url: '/buyer/checkOrderPay',
+    data,
+  }),
   setDefaultAddress: (data) => service({
     method: 'post',
     url: '/buyer/setDefaultAddress',

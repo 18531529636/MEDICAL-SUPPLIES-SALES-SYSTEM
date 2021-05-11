@@ -27,16 +27,16 @@
             :pagination="false"
             :scroll="{ y: 550 }"
           >
-            <span slot="orderStatus" slot-scope="orderStatus, record">
-              <a-tag :color="tagColor(orderStatus)">
-                {{ tagName(orderStatus) }}
+            <span slot="commodityStatus" slot-scope="commodityStatus, record">
+              <a-tag :color="tagColor(commodityStatus)">
+                {{ tagName(commodityStatus) }}
                 <a-icon
-                  v-if="![0].includes(orderStatus)"
-                  :type="iconFront(orderStatus)"
+                  v-if="![0].includes(commodityStatus)"
+                  :type="iconFront(commodityStatus)"
                 ></a-icon>
               </a-tag>
               <a-button
-                v-if="orderStatus === 2"
+                v-if="commodityStatus === 2"
                 type="link"
                 shape="circle"
                 size="small"
@@ -48,7 +48,7 @@
                 type="primary"
                 size="small"
                 v-if="
-                  orderStatus === 5 &&
+                  commodityStatus === 5 &&
                   courierNumberOrderNumber !== record.orderNumber
                 "
                 @click="inputCourierNumber(record.orderNumber)"
@@ -57,7 +57,7 @@
               <div
                 class="input-courier-number"
                 v-if="
-                  orderStatus === 5 &&
+                  commodityStatus === 5 &&
                   courierNumberOrderNumber === record.orderNumber
                 "
               >
@@ -142,32 +142,32 @@ export default {
         },
         {
           title: '商品数量',
-          dataIndex: 'commodityCurrentCount',
-          key: 'commodityCurrentCount',
+          dataIndex: 'commodityCount',
+          key: 'commodityCount',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'commodityCurrentCount' },
+          scopedSlots: { customRender: 'commodityCount' },
         },
         {
           title: '实际付款(元)',
-          dataIndex: 'totalValue',
-          key: 'totalValue',
+          dataIndex: 'commodityTotalValue',
+          key: 'commodityTotalValue',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'totalValue' },
+          scopedSlots: { customRender: 'commodityTotalValue' },
         },
         {
           align: 'left',
-          title: '订单状态',
-          dataIndex: 'orderStatus',
-          key: 'orderStatus',
+          title: '商品状态',
+          dataIndex: 'commodityStatus',
+          key: 'commodityStatus',
           slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'orderStatus' },
+          scopedSlots: { customRender: 'commodityStatus' },
           width: 300,
         },
       ],
       cardOperations: [
-        { title: '未发货订单', key: 'unshippedOrder' },
-        { title: '退货订单', key: 'returnOrder' },
-        { title: '已发货订单', key: 'shippedOrder' },
+        { label: '未发货订单', key: 'unshippedOrder' },
+        { label: '退货订单', key: 'returnOrder' },
+        { label: '已发货订单', key: 'shippedOrder' },
       ],
       orderList: [],
       returnStatus: [
@@ -185,15 +185,16 @@ export default {
     cardOperationList: {
       get() {
         const orderListData = Array.from(this.orderList);
-        const unshippedOrder = orderListData.filter((ele) => ele.orderStatus === 0);
-        const shippedOrder = orderListData.filter((ele) => [1, 2].includes(ele.orderStatus));
+        const unshippedOrder = orderListData.filter((ele) => ele.commodityStatus === 0);
+        const shippedOrder = orderListData.filter((ele) => [1, 2]
+          .includes(ele.commodityStatus));
         const returnOrder = this.currentReturnStatus === -1
-          ? orderListData.filter((ele) => [3, 4, 5, 6, 7].includes(ele.orderStatus))
-          : orderListData.filter((ele) => this.currentReturnStatus === ele.orderStatus);
+          ? orderListData.filter((ele) => [3, 4, 5, 6, 7].includes(ele.commodityStatus))
+          : orderListData.filter((ele) => this.currentReturnStatus === (ele.commodityStatus));
 
-        unshippedOrder.sort((a, b) => a.orderNumber - b.orderNumber);
-        shippedOrder.sort((a, b) => b.orderStatus - a.orderStatus);
-        returnOrder.sort((a, b) => b.setTime - a.setTime);
+        unshippedOrder.sort((a, b) => a.updateTime - b.updateTime);
+        shippedOrder.sort((a, b) => b.updateTime - a.updateTime);
+        returnOrder.sort((a, b) => b.updateTime - a.updateTime);
         return {
           unshippedOrder, shippedOrder, returnOrder,
         };
@@ -243,7 +244,7 @@ export default {
         .then((response) => {
           if (response.data.code === 0) {
             this.$message.success(response.data.msg);
-            this.changeOrderListItem(record.orderNumber, 'orderStatus', 1);
+            this.changeOrderListItem(record.orderNumber, 'commodityStatus', 1);
             return;
           }
           this.$message.error(response.data.msg);
