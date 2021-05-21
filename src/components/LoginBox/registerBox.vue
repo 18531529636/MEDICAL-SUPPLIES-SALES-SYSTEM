@@ -12,14 +12,10 @@
       placeholder="请输入密码"
       class="user-pwd"
     />
-    <a-button
-      class="mail-send"
-      type="link"
-      size="small"
-      @click="sendMail"
-      v-if="userType() === 'buyer'"
+    <a-button class="mail-send" type="link" size="small" @click="sendMail"
       >发送邮箱验证码</a-button
     >
+    <!-- v-if="userType() === 'buyer'" -->
     <input
       v-model="userName"
       placeholder="请输入姓名"
@@ -32,7 +28,13 @@
       class="user-mailbox"
       type="text"
     />
-    <a-cascader
+    <input
+      type="text"
+      v-model="phoneNumber"
+      placeholder="请输电话号码"
+      class="user-name"
+    />
+    <!-- <a-cascader
       :options="options"
       :show-search="{ filter }"
       placeholder="请选择地址"
@@ -47,7 +49,7 @@
       class="user-detailed-address"
       type="text"
       v-if="userType() === 'buyer'"
-    />
+    /> -->
     <input
       v-model="verificationCode"
       placeholder="请输入邀请码"
@@ -64,6 +66,7 @@
 export default {
   data() {
     return {
+      phoneNumber: '',
       loginNumber: '',
       passWord: '',
       userName: '',
@@ -143,7 +146,7 @@ export default {
     registerClick() {
       const {
         loginNumber, passWord, userName,
-        userAddress, userDetailedAddress, mailBox, verificationCode,
+        userAddress, userDetailedAddress, mailBox, verificationCode, phoneNumber,
       } = this;
       const obj = {
         saller: {
@@ -154,8 +157,10 @@ export default {
           userDetailedAddress,
           mailBox,
           verificationCode,
+          phoneNumber,
         },
         buyer: {
+          phoneNumber,
           loginNumber,
           passWord,
           buyerName: userName,
@@ -252,9 +257,9 @@ export default {
     // width: 40%;
     text-align: left;
     top: 80%;
-    right: 50px;
+    right: 0px;
     button {
-      // left: 15%;
+      // left: 1%;
       width: 100px;
     }
   }

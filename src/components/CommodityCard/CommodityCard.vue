@@ -46,6 +46,11 @@
                 </h4>
               </div>
               <div>
+                <h4 class="card-item-introduction-title">
+                  {{ info.introduction }}
+                </h4>
+              </div>
+              <div>
                 <span class="card-item-introduction-mmarketvalue"
                   >市场价：{{ info.marketValue }}</span
                 >
@@ -80,7 +85,7 @@ export default {
     },
     cardHeight: {
       type: String,
-      default: '310',
+      default: '360',
     },
     display: {
       type: String,
@@ -107,10 +112,11 @@ export default {
     },
   },
   methods: {
-    cardClick(operation) {
+    cardClick() {
+      // operation
       // 请求接口 接口返回 是否加入成功， 如果库存不够 则 返回不成功
       // this.$router.push({ name: 'DetailPage', query: { commodityId } });
-      this.$emit('cardClick', operation);
+      // this.$emit('cardClick', operation);
     },
     buttonClick(operation) {
       // 跳转路由到 DetailPage

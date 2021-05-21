@@ -31,6 +31,11 @@ export default {
     url: '/saller/getMyCommodity',
     data,
   }),
+  confirmReceive: (data) => service({
+    method: 'post',
+    url: '/saller/confirmReceive',
+    data,
+  }),
   updateCommodity: (data) => service({
     method: 'post',
     url: '/saller/updateCommodity',
@@ -41,9 +46,9 @@ export default {
     url: '/saller/deleteCommodity',
     data,
   }),
-  setCourierNumber: (data) => service({
+  setGoCourierNumber: (data) => service({
     method: 'post',
-    url: '/saller/setCourierNumber',
+    url: '/saller/setGoCourierNumber',
     data,
   }),
   handleReturnApply: (data) => service({

@@ -35,8 +35,8 @@ export default {
     searchHandle() {
       this.$emit('searchHandle', this.searchData);
     },
-    toUser() {
-      this.$router.push({ name: 'User' });
+    toUser(pageType) {
+      this.$router.push({ name: 'User', params: { pageType } });
     },
     toHome() {
       this.$router.push({ name: 'Home' });

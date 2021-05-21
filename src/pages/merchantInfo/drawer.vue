@@ -117,6 +117,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    type: {
+      type: String,
+      default: 'create',
+    },
+    commodityInfo: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     this.classificationList = classificationList;
@@ -134,35 +142,39 @@ export default {
   },
   methods: {
     onClose(event) {
-      const buttonType = event.target.children[0].textContent;
-      if (buttonType === 'Submit') {
-        console.log(this.createInfo);
-        const hasEmpty = Object.keys(this.createInfo).some((key) => {
-          if (!this.createInfo[key]) {
-            return true;
-          }
-          return false;
-        });
-        if (hasEmpty) {
-          this.$message.warning('信息不能为空');
-          return;
-        }
-        sallerApi
-          .createMyCommodity({
-            createInfo: this.createInfo,
-            userId: this.$store.state.sallerLogin.userId,
-          })
-          .then((response) => {
-            if (response.data.code === 0) {
-              this.$emit('close', true);
-              this.$message.success('上架成功');
-              return;
+      if (this.type === 'create') {
+        const buttonType = event.target.children[0].textContent;
+        if (buttonType === 'Submit') {
+          console.log(this.createInfo);
+          const hasEmpty = Object.keys(this.createInfo).some((key) => {
+            if (!this.createInfo[key]) {
+              return true;
             }
-            this.$message.error('上架失败');
+            return false;
           });
-        console.log(this.createInfo);
-      } else {
-        this.$emit('close');
+          if (hasEmpty) {
+            this.$message.warning('信息不能为空');
+            return;
+          }
+          sallerApi
+            .createMyCommodity({
+              createInfo: this.createInfo,
+              userId: this.$store.state.sallerLogin.userId,
+            })
+            .then((response) => {
+              if (response.data.code === 0) {
+                this.$emit('close', true);
+                this.$message.success('上架成功');
+                return;
+              }
+              this.$message.error('上架失败');
+            });
+          console.log(this.createInfo);
+        } else {
+          this.$emit('close');
+        }
+      } else if (this.type === 'update') {
+        console.log(1);
       }
     },
   },

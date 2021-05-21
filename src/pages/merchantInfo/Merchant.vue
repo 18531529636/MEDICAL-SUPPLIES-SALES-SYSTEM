@@ -9,6 +9,7 @@
     </div>
     <div class="merchant-header">
       <h2 class="merchant-header-title">医疗用品销售系统卖家后台管理系统</h2>
+      <a-button class="loginout-button" type="link" @click="loginout">退出登录</a-button>
       <div class="merchant-header-welcome">
         <span class="merchant-header-welcome-title"
           >商家——{{ merchantName }}</span
@@ -28,6 +29,7 @@ import NavInfo from '@/components/NavMyInfo';
 import MerchantInfo from '@/pages/merchantInfo/MerchantInfo.vue';
 import MerchantCommodity from '@/pages/merchantInfo/MerchantCommodity.vue';
 import MerchantOrder from '@/pages/merchantInfo/MerchantOrder.vue';
+import sallerApi from '@/api/saller';
 
 const navData = [
   { key: 'MerchantOrder', label: '订单' },
@@ -53,6 +55,17 @@ export default {
     },
   },
   methods: {
+    loginout() {
+      sallerApi.logout({ loginNumber: this.$store.state.sallerLogin.loginNumber })
+        .then((response) => {
+          if (response.data.code === 0) {
+            this.$message.success('退出成功');
+            this.$router.push({ name: 'MerChant' });
+            return;
+          }
+          this.$message.error('退出失败');
+        });
+    },
     pageChange(parmas) {
       this.currentPage = parmas;
     },
@@ -87,6 +100,11 @@ export default {
       font-size: 28px;
       top: 50%;
       transform: translateY(-50%);
+    }
+    .loginout-button{
+      position: absolute;
+      right: 500px;
+
     }
     &-welcome {
       display: inline-block;

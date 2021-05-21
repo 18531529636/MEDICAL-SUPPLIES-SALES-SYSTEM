@@ -3,35 +3,34 @@
     <a-descriptions title="买家信息" bordered>
       <a-descriptions-item label="买家名称">
         <span v-if="!editInfo">
-          {{ infoData.buyerName }}
+          {{ $store.state.buyerLogin.userName }}
         </span>
         <a-input v-model="infoData.buyerName" v-else></a-input>
       </a-descriptions-item>
       <a-descriptions-item label="买家ID">
-        <span v-if="!editInfo">
-          {{ infoData.buyerId }}
+        <span>
+          {{ $store.state.buyerLogin.userId }}
         </span>
-        <a-input v-model="infoData.buyerId" v-else></a-input>
       </a-descriptions-item>
       <a-descriptions-item label="账号">
         <span v-if="!editInfo">
-          {{ infoData.buyerNumber }}
+          {{ $store.state.buyerLogin.loginNumber }}
         </span>
         <a-input v-model="infoData.buyerNumber" v-else></a-input>
       </a-descriptions-item>
-      <a-descriptions-item label="买家邀请码">
+      <a-descriptions-item :span="12" label="邮箱">
         <span v-if="!editInfo">
-          {{ infoData.invitationCode }}
+          {{ $store.state.buyerLogin.mailBox }}
         </span>
-        <a-input v-model="infoData.invitationCode" v-else></a-input>
+        <a-input v-model="infoData.buyerNumber" v-else></a-input>
       </a-descriptions-item>
-      <a-descriptions-item :span="5" label="买家已成交订单总数量">
+      <a-descriptions-item :span="12" label="电话号">
         <span v-if="!editInfo">
-          {{ infoData.successAllOrderCount }}
+          {{ $store.state.buyerLogin.phoneNumber }}
         </span>
-        <a-input v-model="infoData.successAllOrderCount" v-else></a-input>
+        <a-input v-model="infoData.buyerNumber" v-else></a-input>
       </a-descriptions-item>
-      <a-descriptions-item :span="8" label="收货地址">
+      <a-descriptions-item :span="12" label="收货地址">
         <a-radio-group v-model="addressKey" @change="changeDefaultAddress">
           <a-card
             title=""
@@ -97,9 +96,9 @@
           </a-popconfirm>
         </div>
       </a-descriptions-item>
-      <a-descriptions-item :span="5" label="修改信息">
+      <!-- <a-descriptions-item :span="5" label="修改信息">
         <a-button type="link" @click="changePassword">修改密码</a-button>
-      </a-descriptions-item>
+      </a-descriptions-item> -->
     </a-descriptions>
   </div>
 </template>

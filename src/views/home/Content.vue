@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper">
     <div class="to-merchant">
-      <a-button type="link" @click="$router.push({ name: 'MerChant' })"
+      <a-button type="link" @click="toMerchant"
         >卖家登录</a-button
       >
     </div>
@@ -54,6 +54,13 @@ export default {
     this.logined = this.$checkBuyerLoginStatus();
   },
   methods: {
+    toMerchant() {
+      const routeData = this.$router.resolve({
+        name: 'MerChant',
+      });
+      window.open(routeData.href, '_blank');
+      // this.$router.push({ name: 'MerChant' });
+    },
     changHomeContent() {
       this.logined = true;
     },

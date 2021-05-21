@@ -1,23 +1,23 @@
 <template>
   <div class="logined-content">
     <div class="user">
-      <div class="user-wrapper">
-        <div class="user-info">
+      <div class="user-wrapper" >
+        <div class="user-info" @click="toUser('info')">
           <span> 个人信息 </span>
         </div>
-        <div class="user-shopping-cart">
+        <div class="user-shopping-cart" @click="toUser('cart')">
           <span> 购物车 </span>
         </div>
-        <div class="user-all-order">
+        <!-- <div class="user-all-order" @click="toUser">
           <span> 全部订单 </span>
-        </div>
-        <div class="user-have-send">
+        </div> -->
+        <div class="user-have-send" @click="toUser('shipped')">
           <span> 已发货 </span>
         </div>
-        <div class="user-havend-send">
+        <div class="user-havend-send" @click="toUser('unshiped')">
           <span> 未发货 </span>
         </div>
-        <div class="user-send-back">
+        <div class="user-send-back" @click="toUser('return')">
           <span> 退货订单 </span>
         </div>
         <div @click="logOut" class="user-send-back">
@@ -39,6 +39,15 @@ export default {
     },
     logOut() {
       this.$emit('logOut');
+    },
+    toUser(pageType) {
+      // this.$router.push({name:'User',params:{pageType:pageType,});
+      this.$router.push({
+        name: 'User',
+        params: {
+          pageType,
+        },
+      });
     },
   },
 };

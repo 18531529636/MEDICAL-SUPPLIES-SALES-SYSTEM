@@ -13,8 +13,16 @@ export default new Vuex.Store({
     commodityList: [],
     buyerLogin: {},
     sallerLogin: {},
+    refresh: false,
   },
   mutations: {
+    REFRESHED(state) {
+      state.refresh = false;
+    },
+    REFRESH(state) {
+      console.log('REFRESH');
+      state.refresh = true;
+    },
     CHANGE_CARTlIST(state, payload) {
       state.commodityList = payload;
     },

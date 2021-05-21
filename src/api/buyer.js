@@ -51,6 +51,21 @@ export default {
     url: '/buyer/setOrder',
     data,
   }),
+  setCartCommodityCount: (data) => service({
+    method: 'post',
+    url: '/buyer/setCartCommodityCount',
+    data,
+  }),
+  checkCommodityCount: (data) => service({
+    method: 'post',
+    url: '/buyer/checkCommodityCount',
+    data,
+  }),
+  confirmReceive: (data) => service({
+    method: 'post',
+    url: '/buyer/confirmReceive',
+    data,
+  }),
   setAddress: (data) => service({
     method: 'post',
     url: '/buyer/setAddress',
@@ -74,6 +89,16 @@ export default {
   deleteAddress: (data) => service({
     method: 'post',
     url: '/buyer/deleteAddress',
+    data,
+  }),
+  setBackCourierNumber: (data) => service({
+    method: 'post',
+    url: '/buyer/setBackCourierNumber',
+    data,
+  }),
+  requestReturn: (data) => service({
+    method: 'post',
+    url: '/buyer/requestReturn',
     data,
   }),
   getVerificationCode: (params) => service({

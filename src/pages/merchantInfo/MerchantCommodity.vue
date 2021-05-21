@@ -10,12 +10,13 @@
         <w-card
           :cateGoryList="cateGoryList"
           :infoList="infoList"
-          @cardClick="cardClick"
           cardWidth="300"
           cardHeight="500"
         >
           <template v-slot:cardItemIntroduction="cardItemIntroduction">
-            <div class="card-item-info" @click.stop="">
+            <div
+              class="card-item-info"
+            >
               <div class="card-item-info-number">
                 <span class="commodity-number">商品编号：</span>
                 <span>{{ cardItemIntroduction.info.commodityNumber }}</span>
@@ -30,6 +31,7 @@
                   type="text"
                   placeholder="请输入标题"
                   v-model="editCommodity.commodityName"
+                  @blur="console.log(11)"
                 />
                 <span v-else>{{
                   cardItemIntroduction.info.commodityName
@@ -106,7 +108,60 @@
                 >
                   删除
                 </button>
-                <button
+
+                <!-- <a-popconfirm
+                  ok-text="更改"
+                  cancel-text="取消"
+                  @confirm="confirmUpdateCommodity"
+                  @cancel="cancelUpdateCommodity"
+                >
+                  <template slot="title">
+                    <div class="edit-address">
+                      <span>商品名称</span>
+                      <a-input
+                        class="edit-input"
+                        :placeholder="defaultCommodityInfo.commodityName"
+                        v-model="editCommodity.commodityName"
+                      ></a-input>
+                      <span>商品会员价</span>
+                      <a-input
+                        class="edit-input"
+                        :placeholder="defaultCommodityInfo.memberValue"
+                        v-model="editCommodity.memberValue"
+                      ></a-input>
+                      <span>商品市场价</span>
+                      <a-input
+                        class="edit-input"
+                        :placeholder="defaultCommodityInfo.marketValue"
+                        v-model="editCommodity.marketValue"
+                      ></a-input>
+                      <span>商品库存</span>
+                      <a-input
+                        class="edit-input"
+                        :placeholder="
+                          defaultCommodityInfo.commodityCurrentCount
+                        "
+                        v-model="editCommodity.commodityCurrentCount"
+                      ></a-input>
+                      <span>商品简介</span>
+                      <a-input
+                        class="edit-input"
+                        :placeholder="defaultCommodityInfo.introduction"
+                        v-model="editCommodity.introduction"
+                      ></a-input>
+                    </div>
+                  </template>
+                  <a-icon slot="icon" type="edit" style="color: green" />
+                  <button
+                    @click="updateClick(cardItemIntroduction.info)"
+                    class="update-button"
+                    type="link"
+                    size="large"
+                  >
+                    修改
+                  </button>
+                </a-popconfirm> -->
+                <!-- <button
                   class="update-button"
                   @click="updateCommodity(cardItemIntroduction.info)"
                   v-if="
@@ -135,14 +190,14 @@
                   "
                 >
                   取消
-                </button>
+                </button> -->
               </div>
             </div>
           </template>
         </w-card>
       </div>
     </div>
-    <drawer-box @close="drawerClose" :visible="drawerVisible"/>
+    <drawer-box @close="drawerClose" :visible="drawerVisible" />
   </div>
 </template>
 
@@ -167,15 +222,28 @@ export default {
     ];
     return {
       drawerVisible: false,
-      editCommodity: '',
+      defaultCommodityInfo: {},
+      editCommodity: {
+        commodityName: '',
+        memberValue: '',
+        marketValue: '',
+        commodityCurrentCount: '',
+        introduction: '',
+      },
       infoList: {},
     };
   },
-
+  watch: {
+  },
   created() {
     this.getCommodityList();
   },
+  mounted() {
+  },
   methods: {
+    updateClick(info) {
+      this.defaultCommodityInfo = info;
+    },
     drawerClose(createSuccess = false) {
       if (createSuccess) {
         this.getCommodityList();
@@ -204,17 +272,29 @@ export default {
       sallerApi.updateCommodity({ updateCommodity: this.editCommodity })
         .then((response) => {
           console.log(response);
-          this.editCommodity = '';
+          this.editCommodity = {
+            commodityName: '',
+            memberValue: '',
+            marketValue: '',
+            commodityCurrentCount: '',
+            introduction: '',
+          };
           this.getCommodityList();
         });
     },
-    concelUpdateCommodity() {
-      this.editCommodity = '';
+    cancelUpdateCommodity() {
+      this.editCommodity = {
+        commodityName: '',
+        memberValue: '',
+        marketValue: '',
+        commodityCurrentCount: '',
+        introduction: '',
+      };
     },
-    cardClick(operation) {
-      const { commodityId } = operation;
-      this.$router.push({ name: 'DetailPage', query: { commodityId } });
-    },
+    // cardClick(operation) {
+    //   const { commodityId } = operation;
+    //   this.$router.push({ name: 'DetailPage', query: { commodityId } });
+    // },
     getCommodityList() {
       sallerApi.getMyCommodity({ userId: this.userId })
         .then((response) => {

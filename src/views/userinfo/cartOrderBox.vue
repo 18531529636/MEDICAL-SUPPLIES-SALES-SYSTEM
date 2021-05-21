@@ -81,6 +81,13 @@
                   @click="closeCourierNumber"
                 ></a-button>
               </div>
+              <a-button
+                v-if="commodityStatus === 1"
+                type="link"
+                @click="confirmReceive(record)"
+              >
+                确认收货
+              </a-button>
             </span>
           </a-table>
         </div>
@@ -109,65 +116,98 @@ export default {
     WCard,
   },
   data() {
+    this.columns = [
+      {
+        title: '订单编号',
+        dataIndex: 'orderNumber',
+        key: 'orderNumber',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'orderNumber' },
+      },
+      {
+        title: '商品编号',
+        dataIndex: 'commodityNumber',
+        key: 'commodityNumber',
+        slots: { title: 'customTitle' },
+      },
+      {
+        title: '商品名称',
+        dataIndex: 'commodityName',
+        key: 'commodityName',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'commodityName' },
+      },
+      {
+        title: '买家id',
+        dataIndex: 'sallerId',
+        key: 'sallerId',
+        slots: { title: 'customTitle' },
+      },
+      {
+        title: '卖家名称',
+        dataIndex: 'sallerName',
+        key: 'sallerName',
+      },
+      {
+        title: '卖家电话',
+        dataIndex: 'sallerPhone',
+        key: 'sallerPhone',
+      },
+      {
+        title: '商品实际单价',
+        dataIndex: 'memberValue',
+        key: 'memberValue',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'memberValue' },
+      },
+      {
+        title: '商品数量',
+        dataIndex: 'commodityCount',
+        key: 'commodityCount',
+        slots: { title: 'commodityCount' },
+        scopedSlots: { customRender: 'commodityCount' },
+      },
+      {
+        title: '实际付款(元)',
+        dataIndex: 'commodityTotalValue',
+        key: 'commodityTotalValue',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'commodityTotalValue' },
+      },
+      {
+        align: 'left',
+        title: '发货快递单号',
+        dataIndex: 'goCourierNumber',
+        key: 'goCourierNumber',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'goCourierNumber' },
+      },
+      {
+        align: 'left',
+        title: '退货快递单号',
+        dataIndex: 'backCourierNumber',
+        key: 'backCourierNumber',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'backCourierNumber' },
+      },
+      {
+        align: 'left',
+        title: '商品状态',
+        dataIndex: 'commodityStatus',
+        key: 'commodityStatus',
+        slots: { title: 'customTitle' },
+        scopedSlots: { customRender: 'commodityStatus' },
+        width: 300,
+      },
+    ];
     return {
       courierNumberOrderNumber: '',
       courierNumber: '',
-      columns: [
-        {
-          title: '订单编号',
-          dataIndex: 'orderNumber',
-          key: 'orderNumber',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'orderNumber' },
-        },
-        {
-          title: '商品编号',
-          dataIndex: 'commodityNumber',
-          key: 'commodityNumber',
-          slots: { title: 'customTitle' },
-        },
-        {
-          title: '商品名称',
-          dataIndex: 'commodityName',
-          key: 'commodityName',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'commodityName' },
-        },
-        {
-          title: '商品实际单价',
-          dataIndex: 'memberValue',
-          key: 'memberValue',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'memberValue' },
-        },
-        {
-          title: '商品数量',
-          dataIndex: 'commodityCount',
-          key: 'commodityCount',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'commodityCount' },
-        },
-        {
-          title: '实际付款(元)',
-          dataIndex: 'commodityTotalValue',
-          key: 'commodityTotalValue',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'commodityTotalValue' },
-        },
-        {
-          align: 'left',
-          title: '商品状态',
-          dataIndex: 'commodityStatus',
-          key: 'commodityStatus',
-          slots: { title: 'customTitle' },
-          scopedSlots: { customRender: 'commodityStatus' },
-          width: 300,
-        },
-      ],
+
       cardOperations: [
         { label: '未发货订单', key: 'unshippedOrder' },
-        { label: '退货订单', key: 'returnOrder' },
         { label: '已发货订单', key: 'shippedOrder' },
+        { label: '退货订单', key: 'returnOrder' },
       ],
       orderList: [],
       returnStatus: [
@@ -224,6 +264,22 @@ export default {
       this.courierNumber = '';
       this.courierNumberOrderNumber = '';
     },
+    confirmReceive(record) {
+      buyerApi.confirmReceive({ orderNumber: record.orderNumber }).then((response) => {
+        if (response.data.code === 0) {
+          this.$message.success('确认收货成功');
+          this.requestOrderList();
+          return;
+        }
+        this.$message.error('确认收货失败');
+      });
+    },
+    requestReturn(record) {
+      buyerApi.requestReturn({ orderNumber: record.orderNumber }).then((response) => {
+        this.requestOrderList();
+        console.log(response.data);
+      });
+    },
     changeOrderListItem(orderNumber, key, value) {
       const orderList = Array.from(this.orderList);
       orderList.some((item, i) => {
@@ -236,7 +292,7 @@ export default {
     },
     sendCourierNumber(record) {
       buyerApi
-        .setCourierNumber({
+        .setBackCourierNumber({
           buyerId: this.buyerId,
           courierNumber: this.courierNumber,
           orderNumber: record.orderNumber,
@@ -244,7 +300,7 @@ export default {
         .then((response) => {
           if (response.data.code === 0) {
             this.$message.success(response.data.msg);
-            this.changeOrderListItem(record.orderNumber, 'commodityStatus', 1);
+            this.requestOrderList();
             return;
           }
           this.$message.error(response.data.msg);
@@ -264,7 +320,6 @@ export default {
           children: item.commodityList,
           key: item.orderNumber,
         }));
-        console.log(data);
         this.orderList = data;
       });
     },

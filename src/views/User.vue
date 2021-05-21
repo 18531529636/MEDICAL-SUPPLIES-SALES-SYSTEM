@@ -54,11 +54,9 @@ export default {
       this.currentPage = parmas;
     },
   },
-  // created() {
-  //   if (this.$route.query.page) {
-  //     this.currentPage = this.$route.query.page;
-  //   }
-  // },
+  created() {
+    this.currentPage = this.$route.params.pageType === 'info' ? 'Info' : 'Cart';
+  },
 };
 </script>
 

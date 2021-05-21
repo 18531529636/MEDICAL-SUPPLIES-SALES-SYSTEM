@@ -31,9 +31,9 @@ export default {
         });
       });
     },
-    sendVerification(mailBox) {
+    sendVerification(data) {
       return new Promise((resolve, reject) => {
-        sallerApi.getInvitationCode(mailBox).then((response) => {
+        sallerApi.getInvitationCode(data).then((response) => {
           resolve(response);
         }).catch((err) => {
           reject(err);

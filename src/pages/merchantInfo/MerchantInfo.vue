@@ -3,33 +3,37 @@
     <a-descriptions title="卖家信息" bordered>
       <a-descriptions-item label="卖家名称">
         <span v-if="!editInfo">
-          {{ infoData.merchantName }}
+          {{ $store.state.sallerLogin.userName }}
         </span>
         <a-input v-else></a-input>
       </a-descriptions-item>
       <a-descriptions-item label="卖家ID">
-        <span v-if="!editInfo">
-          {{ infoData.merchantId }}
+        <span>
+          {{ $store.state.sallerLogin.userId }}
         </span>
-        <a-input v-else></a-input>
       </a-descriptions-item>
       <a-descriptions-item label="账号">
         <span v-if="!editInfo">
-          {{ infoData.merchantNumber }}
+          {{ $store.state.sallerLogin.loginNumber }}
         </span>
         <a-input v-else></a-input>
       </a-descriptions-item>
-      <a-descriptions-item label="卖家邀请码">
+      <a-descriptions-item :span="12" label="邮箱">
         <span v-if="!editInfo">
-          {{ infoData.invitationCode }}
+          {{ $store.state.sallerLogin.mailBox }}
         </span>
-        <a-input v-else></a-input>
+        <a-input v-model="infoData.buyerNumber" v-else></a-input>
       </a-descriptions-item>
-      <a-descriptions-item label="卖家商品数量">
+      <a-descriptions-item :span="12" label="电话号">
         <span v-if="!editInfo">
+          {{ $store.state.sallerLogin.phoneNumber }}
+        </span>
+        <a-input v-model="infoData.buyerNumber" v-else></a-input>
+      </a-descriptions-item>
+      <!-- <a-descriptions-item label="卖家商品数量">
+        <span>
           {{ infoData.commodiityCount }}
         </span>
-        <a-input v-else></a-input>
       </a-descriptions-item>
       <a-descriptions-item label="卖家已成交订单总数量">
         <span v-if="!editInfo">
@@ -42,12 +46,12 @@
           {{ infoData.successCurMonthOrderCount }}
         </span>
         <a-input v-else></a-input>
-      </a-descriptions-item>
+      </a-descriptions-item> -->
     </a-descriptions>
-    <a-button style="margin: 20px 20px 0 0" @click="editInfo = !editInfo"
+    <!-- <a-button style="margin: 20px 20px 0 0" @click="editInfo = !editInfo"
       >修改信息</a-button
     >
-    <a-button style="margin: 20px 20px 0 0" type="link">更改密码</a-button>
+    <a-button style="margin: 20px 20px 0 0" type="link">更改密码</a-button> -->
   </div>
 </template>
 
@@ -83,7 +87,7 @@ export default {
   background-color: #fff;
   text-align: left;
   padding: 20px;
-  .ant-input{
+  .ant-input {
     height: 21px;
   }
 }

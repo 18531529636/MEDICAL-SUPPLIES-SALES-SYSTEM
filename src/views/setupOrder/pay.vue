@@ -182,13 +182,16 @@ export default {
       return false;
     },
     totalValue() {
-      if (!this.commodityList.length) {
+      console.log(this.commodityList);
+      if (!this.commodityList.length || !this.commodityList) {
         return 0;
       }
-      return this.$utils.toArray(this.commodityList)
+      let total = this.$utils.toArray(this.commodityList)
         .reduce((sum, item, index) => (index === 1 ? sum.commodityTotalValue
           + item.commodityTotalValue : sum
-        + item.commodityTotalValue)).toFixed(2);
+        + item.commodityTotalValue));
+      total = this.commodityList.length === 1 ? total.commodityTotalValue : total;
+      return total.toFixed(2);
     },
     cartList() {
       return this.$route.query.num;
@@ -216,6 +219,7 @@ export default {
       buyerApi.checkOrderPay({ orderNumberList: this.orderNumberList })
         .then((response) => {
           if (response.data.code === 0) {
+            this.$store.commit('REFRESH');
             window.opener = null;
             window.open('about:blank', '_top').close();
             return;

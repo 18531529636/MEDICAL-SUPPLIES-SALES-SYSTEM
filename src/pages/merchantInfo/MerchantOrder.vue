@@ -30,7 +30,10 @@
             :columns="columns"
             :data-source="cardOperationList[cardContent.cateGoryKey]"
           >
-            <span slot="commodityStatus" slot-scope="commodityStatus, record, index">
+            <span
+              slot="commodityStatus"
+              slot-scope="commodityStatus, record, index"
+            >
               <a-tag :color="tagColor(commodityStatus)">
                 {{ tagName(commodityStatus) }}
                 <a-icon
@@ -39,14 +42,19 @@
                 ></a-icon>
               </a-tag>
               <a-button
+                v-if="commodityStatus === 6"
+                type="link"
+                @click="confirmReceive(record)"
+              >
+                确认退货收货
+              </a-button>
+              <a-button
                 v-if="commodityStatus === 3"
                 type="link"
                 shape="circle"
                 size="small"
                 icon="check"
-                @click="
-                  approvalAgree(true, record)
-                "
+                @click="approvalAgree(true, record)"
               ></a-button>
               <a-button
                 v-if="commodityStatus === 3"
@@ -54,9 +62,7 @@
                 shape="circle"
                 size="small"
                 icon="close"
-                @click="
-                  approvalAgree(false, record)
-                "
+                @click="approvalAgree(false, record)"
               ></a-button>
               <a-button
                 type="primary"
@@ -182,6 +188,13 @@ export default {
           scopedSlots: { customRender: 'buyerName' },
         },
         {
+          title: '买家电话',
+          dataIndex: 'buyerPhone',
+          key: 'buyerPhone',
+          slots: { title: 'customTitle' },
+          scopedSlots: { customRender: 'buyerPhone' },
+        },
+        {
           align: 'left',
           title: '发货快递单号',
           dataIndex: 'goCourierNumber',
@@ -262,6 +275,16 @@ export default {
     handleStatusChange(value) {
       this.currentReturnStatus = value;
     },
+    confirmReceive(record) {
+      sallerApi.confirmReceive({ orderNumber: record.orderNumber }).then((response) => {
+        if (response.data.code === 0) {
+          this.$message.success('确认收货成功');
+          this.requestOrderList();
+          return;
+        }
+        this.$message.error('确认收货失败');
+      });
+    },
     changeOrderListItem(orderNumber, key, value) {
       const orderList = Array.from(this.orderList);
       orderList.some((item, i) => {
@@ -274,7 +297,7 @@ export default {
     },
     sendCourierNumber(record) {
       sallerApi
-        .setCourierNumber({
+        .setGoCourierNumber({
           sallerId: this.sallerId,
           courierNumber: this.courierNumber,
           orderNumber: record.orderNumber,

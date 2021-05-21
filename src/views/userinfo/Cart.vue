@@ -5,7 +5,7 @@
         <div class="cart-cart-title">
           <h3>购物车</h3>
         </div>
-        <div class="cart-cart-table">
+        <div class="cart-cart-table" :key="cartKey">
           <a-table
             :rowKey="(record) => record.commodityId"
             :columns="columns"
@@ -23,6 +23,22 @@
                 >删除</a
               >
             </span>
+
+            <div slot="commodityCount" slot-scope="commodityCount, record">
+              <a-button
+                v-if="record.cartNumber !== setCountNumber"
+                @click="showSerContentBox(record)"
+              >
+                X {{ commodityCount }}
+              </a-button>
+              <div v-if="record.cartNumber === setCountNumber">
+                <a-button type="circle" @click="reduceCount">-</a-button>
+                <a-input style="width: 40px" v-model="count"></a-input>
+                <a-button type="circle" @click="count++">+</a-button>
+                <a-button type="link" @click="confirmSetCount">确认</a-button>
+                <a-button type="link" @click="cancelSetCount">取消</a-button>
+              </div>
+            </div>
           </a-table>
         </div>
         <div class="cart-cart-pay">
@@ -44,7 +60,7 @@
 </template>
 
 <script>
-// import buyerApi from '@/api/buyer';
+import buyerApi from '@/api/buyer';
 import CartOrder from './cartOrderBox.vue';
 
 // const tencentPay = {
@@ -63,14 +79,34 @@ export default {
   },
   data() {
     return {
+      cartKey: 0,
       // qrShow: false,
       selectedRows: [],
       payType: 'alipay',
+      count: 0,
+      setCountNumber: '',
+      showSetCount: false,
       columns: [
         {
           title: '名称',
           dataIndex: 'commodityName',
           key: 'commodityName',
+        },
+        {
+          title: '买家id',
+          dataIndex: 'sallerId',
+          key: 'sallerId',
+          slots: { title: 'customTitle' },
+        },
+        {
+          title: '卖家名称',
+          dataIndex: 'sallerName',
+          key: 'sallerName',
+        },
+        {
+          title: '卖家电话',
+          dataIndex: 'sallerPhone',
+          key: 'sallerPhone',
         },
         {
           title: '市场价',
@@ -87,6 +123,8 @@ export default {
           title: '数量',
           dataIndex: 'commodityCount',
           key: 'commodityCount',
+          width: 300,
+          scopedSlots: { customRender: 'commodityCount' },
         },
         {
           title: '总价(会员价)',
@@ -111,16 +149,31 @@ export default {
       },
       deep: true,
     },
+    refresh: {
+      handler(newValue) {
+        if (newValue) {
+          // this.$store.commit('REFRESHED');
+          // this.$router.go(0);
+        }
+      },
+      deep: true,
+    },
   },
   computed: {
+    commodityList() {
+      return this.$store.state.commodityList;
+    },
+    refresh() {
+      return this.$store.state.refresh;
+    },
     buyerId() {
       return this.$store.state.buyerLogin.userId;
     },
     dataSource: {
       get() {
         const data = [];
-        if (!this.$store.state.commodityList.length) return [];
-        this.$store.state.commodityList.forEach((item) => {
+        if (!this.commodityList.length) return [];
+        this.commodityList.forEach((item) => {
           const obj = {
             ...item,
             totalPrice: item.commodityCount * item.memberValue,
@@ -149,6 +202,37 @@ export default {
     },
   },
   methods: {
+    reduceCount() {
+      if (this.count === 1) {
+        this.$message.warning('购物车商品数量不可为0，如需删除请点击删除按钮');
+        return;
+      }
+      this.count -= 1;
+    },
+    cancelSetCount() {
+      this.count = 0;
+      this.setCountNumber = '';
+    },
+    confirmSetCount() {
+      buyerApi.setCartCommodityCount({
+        cartNumber: this.setCountNumber, commodityCount: this.count,
+      })
+        .then((reponse) => {
+          if (reponse.data.code === 0) {
+            this.$message.success('修改成功');
+            this.$store.dispatch('REQUEST_CART');
+            this.cartKey = Math.random();
+            this.count = 0;
+            this.setCountNumber = '';
+            return;
+          }
+          this.$message.error('修改失败');
+        });
+    },
+    showSerContentBox(record) {
+      this.setCountNumber = record.cartNumber;
+      this.count = record.commodityCount;
+    },
     sendTemporaryOrder() {
       // 创建临时订单
       if (!this.selectedRows.length) {
@@ -156,23 +240,21 @@ export default {
         return;
       }
       const selectRows = Array.from(this.selectedRows);
+      // const cartList = selectRows.map((item) => ({
+      //   commodityNumber: item.commodityNumber,
+      //   cartNumber: item.cartNumber,
+      //   commodityCount: item.commodityCount,
+      // }));
       const cartNumberList = selectRows.map((item) => item.cartNumber);
-      console.log(cartNumberList);
-      // const receivingAddress = {
-      //   province: '北京',
-      //   city: '北京市',
-      //   area: '大兴区',
-      //   town: '西红门镇',
-      //   detailAddress: '蜂窝公寓',
-      // };
-      // buyerApi.setOrder({ cartNumberList, receivingAddress, buyerId: this.buyerId })
-      //   .then((response) => {
-      //     console.log(response.data);
-      //     if (response.data.code === 0 || !response.data.orderList.length) {
-      //     }
-      //   });
+      // buyerApi.checkCommodityCount({ cartList }).then((response) => {
+      //   if (response.data.code === 0) {
+      //     this.$message.error('商品数量查询成功 ');
+
+      //     return;
+      //   }
+      //   this.$message.error('商品数量查询失败');
+      // });
       const queryData = this.$utils.crypto.encrypte(cartNumberList);
-      console.log(queryData);
       const routeData = this.$router.resolve({
         name: 'PayPage',
         query: { num: queryData },
@@ -187,11 +269,7 @@ export default {
   },
   mounted() {
     const tableContent = document.getElementsByClassName('ant-table-body')[0];
-    console.log('this.dataSource');
-    console.log(this.dataSource);
     if (!this.dataSource.length) {
-      console.log(tableContent);
-      console.log(tableContent.className);
       if (tableContent.className !== 'ant-table-body no-data') {
         // tableContent.classList.add('no-data');
         tableContent.style.height = '0px';
