@@ -127,15 +127,7 @@ export default {
   },
   created() {
     this.getAddress();
-    this.infoData = {
-      buyerName: 'test-wu',
-      buyerId: '666666',
-      buyerNumber: '1370099717',
-      invitationCode: '102988',
-      cartCount: 666,
-      successAllOrderCount: 6666,
-      successCurMonthOrderCount: 666,
-    };
+    this.infoData = {};
   },
   methods: {
     getAddress() {

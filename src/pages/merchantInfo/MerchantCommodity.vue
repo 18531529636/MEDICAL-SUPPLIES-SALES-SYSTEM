@@ -14,9 +14,7 @@
           cardHeight="500"
         >
           <template v-slot:cardItemIntroduction="cardItemIntroduction">
-            <div
-              class="card-item-info"
-            >
+            <div class="card-item-info">
               <div class="card-item-info-number">
                 <span class="commodity-number">商品编号：</span>
                 <span>{{ cardItemIntroduction.info.commodityNumber }}</span>
@@ -93,7 +91,12 @@
                   placeholder="请输入商品商品简介"
                   v-model="editCommodity.introduction"
                 />
-                <span v-else>{{ cardItemIntroduction.info.introduction }}</span>
+                <span
+                  class="introduction"
+                  :title="cardItemIntroduction.info.introduction"
+                  v-else
+                  >{{ cardItemIntroduction.info.introduction }}</span
+                >
               </div>
               <div class="handle">
                 <button
@@ -309,6 +312,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.introduction {
+  width: 100%;
+  max-height: 40px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+}
 .merchantcommodity-wrapper {
   width: 100%;
   height: 100%;

@@ -46,7 +46,7 @@
                 </h4>
               </div>
               <div>
-                <h4 class="card-item-introduction-title">
+                <h4 class="card-item-introduction-title" :title="info.introduction">
                   {{ info.introduction }}
                 </h4>
               </div>
